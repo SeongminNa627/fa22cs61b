@@ -6,7 +6,11 @@ public class Collatz {
     /** Returns the nextNumber in a Collatz sequence. */
     public static int nextNumber(int n) {
         // TODO: Fill in this method.
-        return 1;
+        // This method creates the next Collatz number based on the input number.
+        if (n%2 == 0) {
+            return n / 2;
+        }
+        return 3*n +1;
     }
 
     public static void main(String[] args) {
