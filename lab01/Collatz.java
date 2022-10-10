@@ -18,7 +18,7 @@ public class Collatz {
         System.out.print(n + " ");
 
         // Some starter code to test
-        while (n != 1) {          
+        while (n != 1) {
             n = nextNumber(n);          
             System.out.print(n + " ");
         }
