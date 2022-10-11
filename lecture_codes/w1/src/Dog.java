@@ -1,6 +1,9 @@
 public class Dog {
     public int weightInPounds;
     // How big a dog is
+    public Dog(int w){
+        weightInPounds = w;
+    }
     public void makeNoise(){
         if (weightInPounds < 10) {
             System.out.println("yip!");
