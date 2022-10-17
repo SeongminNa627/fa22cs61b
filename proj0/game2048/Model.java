@@ -187,7 +187,8 @@ public class Model extends Observable {
                 // 1. Checking from up to down.
                 for (int next_r = r + 1; next_r < b.size(); next_r = next_r + 1){
                     Tile next = b.tile(c, next_r);
-                    // if there is any vacancy below the element, return true.
+                    // if there is any vacancy below the element, return true, or continue to iterate.
+                    
                     if (next == null){
                         return true;
                     }
