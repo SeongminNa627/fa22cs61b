@@ -172,10 +172,14 @@ public class Model extends Observable {
 
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        /**
+         * We iterate through each element and see if the elements below and right of the element has a same value.
+         */
 
         for (int r = 0; r < b.size(); r = r + 1){
             for (int c = r; c < b.size(); c = c + 1){
                 Tile curr = b.tile(c, r);
+                // 0. Return true if there is the element is null, meaning we have a space.
                 if (curr == null){
                     return true;
                 }
@@ -183,6 +187,7 @@ public class Model extends Observable {
                 // 1. Checking from up to down.
                 for (int next_r = r + 1; next_r < b.size(); next_r = next_r + 1){
                     Tile next = b.tile(c, next_r);
+                    // if there is any vacancy below the element, return true.
                     if (next == null){
                         return true;
                     }
@@ -196,6 +201,7 @@ public class Model extends Observable {
                 // 2. Checking from left to right.
                 for (int next_c = c + 1; next_c < b.size(); next_c = next_c + 1){
                     Tile next = b.tile(next_c,r);
+                    // if there is any vacancy below the element, return true.
                     if (next == null){
                         return true;
                     }
