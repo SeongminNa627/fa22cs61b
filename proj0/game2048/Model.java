@@ -117,7 +117,32 @@ public class Model extends Observable {
      */
     public void tilt(Side side) {
         // TODO: Fill in this function.
-
+        Tile target = null;
+        int pos = 0;
+        for (int c = 0; c < this.size(); c += 1){
+            for (int r = 0; r < 4; r += 1){
+                Tile curr = this.tile(c, r);
+                if (curr == null){
+                    continue;
+                }
+                if (target == null){
+                    curr.move(c, pos);
+                    target = curr;
+                }
+                else {
+                    if (target.value() == curr.value()){
+                        curr.merge(c, r, target);
+                        target = this.tile(c, target.row() + 1);
+                        pos = pos + 1;
+                    }
+                    else {
+                        target = this.tile(c, target.row() + 1);
+                        pos = pos + 1;
+                        curr.move(c, pos);
+                    }
+                }
+            }
+        }
         checkGameOver();
     }
 
@@ -175,7 +200,6 @@ public class Model extends Observable {
         /**
          * We iterate through each element and see if the elements below and right of the element has a same value.
          */
-
         for (int r = 0; r < b.size(); r = r + 1){
             for (int c = r; c < b.size(); c = c + 1){
                 Tile curr = b.tile(c, r);
@@ -188,7 +212,7 @@ public class Model extends Observable {
                 for (int next_r = r + 1; next_r < b.size(); next_r = next_r + 1){
                     Tile next = b.tile(c, next_r);
                     // if there is any vacancy below the element, return true, or continue to iterate.
-                    
+
                     if (next == null){
                         return true;
                     }
