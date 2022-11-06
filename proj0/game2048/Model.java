@@ -117,32 +117,36 @@ public class Model extends Observable {
      */
     public void tilt(Side side) {
         // TODO: Fill in this function.
-        Tile target = null;
-        int pos = 0;
+        _board.setViewingPerspective(side);
         for (int c = 0; c < this.size(); c += 1){
-            for (int r = 0; r < 4; r += 1){
-                Tile curr = this.tile(c, r);
+            Tile target = null;
+            int pos = 3;
+            for (int r = 3; r >= 0; r -= 1){
+                Tile curr = _board.tile(c, r);
                 if (curr == null){
                     continue;
                 }
                 if (target == null){
-                    curr.move(c, pos);
+                    _board.move(c, pos, curr);
                     target = curr;
                 }
                 else {
                     if (target.value() == curr.value()){
-                        curr.merge(c, r, target);
-                        target = this.tile(c, target.row() + 1);
-                        pos = pos + 1;
+                        _score += 2 * target.value();
+                        _board.move(c, pos, curr);
+                        target = _board.tile(c, pos - 1);
+                        pos = pos - 1;
                     }
                     else {
-                        target = this.tile(c, target.row() + 1);
-                        pos = pos + 1;
-                        curr.move(c, pos);
+                        target = _board.tile(c, pos - 1);
+                        pos = pos - 1;
+                        _board.move(c, pos,curr);
+                        target = _board.tile(c, pos);
                     }
                 }
             }
         }
+        _board.setViewingPerspective(Side.NORTH);
         checkGameOver();
     }
 
