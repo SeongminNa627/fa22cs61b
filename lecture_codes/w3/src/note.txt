@@ -1,0 +1,132 @@
+Limitations on SLList:
+adding to the back is slow
+- it iterates the whole list to add an element.
+    - caching the last?
+        - add and get will be supremely fast, but removeLast is slow; we need the reference for the second-to-last.
+        - do we do the third-to-last again?
+    - having a new node with front and back (Doubly Linked List)
+        - last sometimes points at the sentinel, and sometimes points at a real node
+            - solution1: sentinel for front and sentinel for back!
+            - solution2: one sentinel that is both direction.
+                - when it's empty, the sentinel.next is itself, and the sentinel.prev is itself.
+                - as we add more elements: sentinel.next is the first item, and sentinel.prev is the last item.
+                    - the last item's next is the sentinel, and the first's prev is the sentinel.
+
+
+-Generic Lists: I want to store string
+
+
+public class SLList {
+    private class IntNode {
+        public int item;
+        public IntNode next;
+        public IntNode(int i, IntNode n){
+            item = i;
+            next = n;
+        }
+    }
+}
+
+
+public class SLList<LochNess> {
+//only specify once and use Reference Type corresponding to the primitive type.
+    private class StuffNode{
+        public LochNess item;
+        public StuffNode next;
+        public StuffNode(LochNess i, StuffNode n){
+
+
+        }
+    }
+}
+public class SLListLauncher{
+// In a file using the data type, we specify the desired type only once in a declaration, and use the empty diamond operator <> during instantiation
+    public static void main(String[] args){
+        SLList<String> s1 = new SLList<>("string");
+
+    }
+}
+
+
+Arrays
+- how memory works:
+    -to store data, we need memory boxes. (int x, Walrus w1, Walrus w2 = new Walrus(30, 5.6))
+    - array:
+        - numbered sequence of memory boxes
+            - to get ith item of array A, A[i];
+            - has a length = number of boxes, has to be the same type, same number of bits
+            - gives you one reference when it's created.
+            - similar to a class, but with no methods.
+        - three valid notations:
+            - y = new int[3]; --> three boxes with defualt values
+            - x = new int[] {1,2,3,4,5}; --> 5 boxes with the values
+            - int[] w = {9,10,11,12,13}; --> only works when declaring as well
+            ex)
+            int[] z = null; -> 64bits box, fill it up with 0 bits
+            int[] x,y; -> two boxes with nulls
+
+            x = new int[]{1,2,3,4,5}; -> fill the 64 bits-box with the location of the array.
+            y = x; -> copy the address from x.
+            x = new int[]{-1,2,5,4,99}; -> copy the address returned by the "new" function.
+            y = new int[3]; -> replace the address a new address of three boxes with 0.
+            z = new int[0]; -> points to nothing
+            int xL = x.length; ->  5;
+
+            String[] s = new String[6]; -> 6 boxes 64bits for each and holds the addresses.
+            s[4] = "ketchup"; s[4] gets assigned the address of the string. (String can be instantiated with "", so we treat that there was a "new").
+            s[x[3]-x[1]] = "muffins";
+
+            int[] b = {9, 10, 11};
+            System.arraycopy(b, 0, x, 3, 2); copy b starting from 0 and paste into x starting from 3 for 2 items.
+            --> faster when the array is long.
+2D Arrays
+public class ArrayBasics2 {
+	/** ArrayBasics
+	 */
+
+	public static void main(String[] args) {
+		int[][] pascalsTriangle; -> one box referencing int array
+		pascalsTriangle = new int[4][]; four boxes ready to reference int arrays each of which is null
+		int[] rowZero = pascalsTriangle[0]; each box can only hold int[], pascalTriangle[0] --> null
+
+		pascalsTriangle[0] = new int[]{1};
+		pascalsTriangle[1] = new int[]{1, 1};
+		pascalsTriangle[2] = new int[]{1, 2, 1};
+		pascalsTriangle[3] = new int[]{1, 3, 3, 1};
+		int[] rowTwo = pascalsTriangle[2]; --> copy the bits: the address of [1,2,1];
+		rowTwo[1] = -5; --> destructively changes the array!!! hook in the middle
+
+		int[][] matrix; array of array reference;
+		matrix = new int[4][]; -> four boxes with null;
+		matrix = new int[4][4]; -> filling up everything with 0
+
+		int[][] pascalAgain = new int[][]{{1}, {1, 1},
+		{1, 2, 1}, {1, 3, 3, 1}};
+	}
+}
+
+Quiz:
+int[][] x = {{1,2,3},{4,5,6},{7,8,9}};
+int[][] z = new int[3][];
+z[0] = x[0];
+z[1] = x[1];
+z[2] = x[2];
+z[0][0] = -z[0][0];
+
+int[][] w = new int[3][3];
+System.arraycopy(x[0], 0, w[0], 0, 3);
+System.arraycopy(x[1], 0, w[1], 0, 3);
+System.arraycopy(x[2], 0, w[2], 0, 3);
+w[0][0] = -w[0][0];
+
+
+
+Arrays vs Classes
+both can be used to organized a bunch of memory boxes.
+array boxes are accessed using [] notation.
+class boxes are accessed using dot notation.
+array boxes must all be of the same type.
+class boxes may be of different types.
+both have a fixed number of boxes.
+1. array indices can be computed at runtime -> on the fly
+2. cannot access the instance variable during runtime asking a quesetion to a compiler.

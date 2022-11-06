@@ -1,0 +1,4 @@
+retrieval from any position of an array is very fast
+
+
+AList.java
