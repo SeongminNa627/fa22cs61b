@@ -1,0 +1,663 @@
+public class AList<Item>{
+}
+public class SLList<Item>{
+}
+Both share some similiarities.
+
+
+Let us be hypothetical, and we were trying to write a library where we create some operations using ALList and SLList.
+Consider
+public static String longest(SLList<String> list){
+    int maxDex = 0;
+    for (int i = 0; i < list.size(); i += 1){
+        String longestString = list.get(maxDex);
+        String thisString = list.get(i);
+        if (thisString.length() > longestString.length()) {
+            maxDex = i;
+        }
+    }
+    return list.get(maxDex);
+}
+What can we change to make it work with AList? SLList --> AList in the canonical name.
+However, we cannot create every method that is tailored for every different kind of lists.
+    - BTW, this idea of having the same name of functions but different signature and parameter is called "overloading"
+    - The source code gets really long
+    - Too much repetition.
+    - Hard to maintain. (If anything ever does change, we need to change one and the other)
+
+
+Hypernyms
+    - dog is hypernym of poodle, malamute,.etc. (is - a relationship. poodle is a dog)
+    - poodle is a hyponym of dog
+    - Important point: List is a hypernym of SLList and AList. (SLList is a list, AList is a list)
+Interface: THE HYPERNYM of classes!
+    - instaed of using the keyword, class, we will use the keyword
+    - list of what a List can do. Not HOW!!! (No implementation);
+        public interface List61B<Item>{
+            public void addLast(Item x);
+            public Item getLast();
+            public Item getLast();
+            public Item get(int i);
+            public int size();
+            public Item removeLast();
+        }
+     - we use the keyword, "implement", to indicate the relationship for each class!
+        public class SLList<Item> "implements" List61B<Item>
+     - we can now resolve the issue up there!
+        - public static String longest(List61B<String> list){
+              int maxDex = 0;
+              for (int i = 0; i < list.size(); i += 1){
+                  String longestString = list.get(maxDex);
+                  String thisString = list.get(i);
+                  if (thisString.length() > longestString.length()) {
+                      maxDex = i;
+                  }
+              }
+              return list.get(maxDex);
+          }
+         - Not just malamute, not just a poodle, but any kind of dogs!
+Overriding:
+if a subclass has a method with the exact same signature as in the superclass we say the subclass overrides the method.
+    public interface List61B<Item> {
+        public void addLast(Item y);
+        ...
+    }
+
+    public class AList<Item> implements List61B<Item>{
+        ...
+        public void addLast(Item x) {
+
+        }
+    }
+    AList overrides addLast(Item)
+
+    - Animal's subclass Pig overrides the makeNoise() method.
+    - Methods with the same name but different signatures are overloaded.
+
+    public interface Animal{
+        public void makeNoise();
+    }
+    public class Pig implements Animal{
+        public void makeNoise() {
+            System.out.print("oink");
+        }
+    }
+    Pig overrides makeNoise();
+
+    public class Dog implements Animal {
+        public void makeNoise(Dog x){
+
+        }
+        makeNoise is overloaded (different signature)
+    }
+    public class Math{
+        public int abs(int a)
+        public double abs(double a)
+    }
+    Anytime we override something from interface, we say @Override
+        - Protects against typos
+        - Remiinds Programmers that method definition came from somewhere higher up
+    The usage of the implements keyword is sometimes referred to as interface inheritance
+        - All sub-classes are said to inherit the interface from their super-class
+        - Interface consists of all the method signatures
+        - Interface can inherit an Interface
+        - What about copying the bits? If X is a superclass of Y,then memory boxes for X may contain Y.
+            - An SLList is-a List
+            - Practice:
+                public static void main(String[] args){
+                    List61B<String> someList = new SLLis<String>();
+                    someList.addFirst("elk");
+                }
+Implementation Inheritance
+    - We can always write up an implementation in the superclass (interface) and pass it onto our next generation.
+    - In the interface file, we say
+        default public void print(){
+            for (int i = 0; i < size(); i  ++ ){
+                System.out.print(get(i) + " ");
+            }
+            System.out.println();
+        } --> efficient for AList, inefficient for SLList
+        Only used the methods defined in the interface file.
+Overriding Default Method
+    - Implement much tailored version for SLList.
+    - If we do not put @Override, it will run the superclass's print()
+    - Quiz:
+    public static void main(String[] args){
+        List61B<String> someList = new SLLis<String>();
+        someList.addFirst("elk");
+        someList.print();
+    }
+    - Which print() method is it?
+        - SLList.print()!
+
+Static Type vs. Dynamic Type
+1. Static type: Every variable has a compile-time type, a.k.a. "static type".
+2. Runtime type: specified when instantiated. (new keyword)
+    - Equal to the type of the object being pointed at.
+    public static void main(String[] args){
+        LivingThing lt1;
+        lt1 = new Fox();
+        Animal a1 = lt1;
+        Fox h1 = a1;
+        lt1 = new Squid();
+    }
+- Suppose we call a method of an object using a variable with:
+    compile-time type X
+    run-time type Y
+    Then if Y overrides the method, Y's method is used instead (dynamic method selection)
+    When Java runs a method that is overriden, it searches for the appropriate method signature in it's dynamic type and runs it.
+
+    IMPORTANT: This does not work for overloaded methods!
+
+    Suppose we define the two overloaded methods below in Puzzle.java
+    public static void peek(List61B<String> List){
+        System.out.println(list.getLast());
+    }
+    public static String peek(SLList<String> list){
+        System.out.println(list.getFirst());
+    }
+
+    SLList<String> SP = new SLList<String>();
+    List61B<String> LP = SP;
+    SP.addLast("elk");
+    SP.addLast("are");
+    SP.addLast("cool");
+    peek(SP);
+    peek(LP);
+
+    What will be printed out? elk cool
+
+    Dynamic method selection only happens for overriden methods
+        - when instance method of subtype overrides some method in supertype.
+        - Example: makeNoise or print
+    Dynamic method selection does not happen for overloaded methods:
+        - When some other class has two methods, one for the supertype and one for the subtype.
+        - Example: peek(SLList) vs. peek(List61B)
+
+Summary
+1. interface vs. implementation inheritance
+    interface inheritance (a.k.a. what):
+        allows you to generalize code in a powerful, simple way
+    implementation inheritance (a.k.a how)
+        allows code-reuse: Subclasses can rely on superclasses or interfaces.
+            example: print() implemented in List61B.java
+            gives another dimension of control to subclass designers: Can decide whehter or not to override default implementations.
+    important: in both cases, we specify "is-a" relationships, not "has-a".
+        Good: Dog implements Animal, SLList implements List61B.
+        Bad: Cat implements Claw, Set Implements SLList.
+
+    Potential Dangers:
+        1. Makes it harder to keep track of where soemthing was actually implemented.
+        2. Rules for resolving conflicts can be arcane. Won't cover in 61B.
+            Example: What if two interfaces both give conflicting default methods?
+        3. Encourages overly complex code (especially with novices)
+            Common mistake: Has-a vs.is-a!
+        4. Breaks encaptulation!
+            What is encaptulation?
+
+List<String> list = new SLList<String>();
+
+
+
+
+Extends, Casting, Higher Order Functions
+Extends: We want to create another class with a new feature and keep all the original functionalities. You use extends.
+ex)
+public class RotatingSLList<Item> extends SLList<Item>{
+    public void rotateRight(){
+        Item x = removeLast();
+        addFirst(x);
+    }
+    public static void main(String[] args){
+        RotatingSLList<Integer> rs1 = new RotatingSLList<>();
+        rs1.addLast(10);
+        rs1.addLast(11);
+        rs1.addLast(12);
+        rs1.addLast(13);
+
+        rs1.rotateRight();
+        rs1.print();
+    }
+}
+Extends allows RotatingSLList to inherit all members of SLList:
+    1. All instance and static variables.
+    2. All methods.
+    3. All nested classes.
+    4. Not Contructors.
+We can also override what we have extended.
+Ex) VegefulSLList<Item> : It never forgets the deleted items!
+    public class VengefulSLList<Item> extends SLList<Item> {
+        SLList<Item> deletedItems;
+        /** Overriding the plain removeLast is needed since we can then just add the element to deletedItems on the fly*/
+        public VengefulSLList(){
+            deletedItems = new SLList<Item>();
+        }
+
+        @Override
+        public Item removeLast(){
+        // We cannot just copy everything and paste it into here because most of the variable used here are private.
+        // What we can do is to use super.
+            Item x = super.removeLast();
+            deletedItems.addLast();
+        }
+
+        /** Prints deleted items.*/
+        public void printLostItems(){
+            deltedItems.print();
+        }
+    }
+Constructors are quite weird!
+Consider the following:
+
+public static void main(String[] args){
+    VengefulSLList<Integer> vs1 = new VengefulSLList<Integer>();
+    vs1.addLast(1);
+    vs1.addLast(5);
+    vs1.addLast(10);
+    vs1.addLast(13);
+
+    vs1.removeLast();
+    vs1.removeLast();
+
+    System.out.print("The fallen are: ");
+
+}
+
+As soon as we call the contructor in the inherited class, it immediately calls one of the super class' constructors.
+Then, it executes its own contructor.
+You could have done something:
+public VengefulSLList(){
+    super();
+    deletedItems = new SLList<Item>();
+
+}
+public VengefulSLList(Item x){
+    super(x); --> IMPORTANT: If you do not specify this, it will run the default without the parameter version!
+    deletedItems = new SLList<Item>();
+}
+Basically, all classes extends Object class, but interfaces do not.
+Extends for is-a relationship, not has-a relationship.
+
+
+
+Encapsulation!
+Implementation Inheritance Breaks Encapsulation
+Dog class with two methods shown:
+public class Dog{
+    public void bark(){
+        System.out.println("bark"); //barkMany(1);
+    }
+    public void barkMany(int N){
+        for (int i = 0; i < N; i +=1){
+            bark(); // System.out.println("bark");
+        }
+    }
+}
+public class VerboseDog implements Dog{
+    @Override
+    public void barkMany(int N){
+    System.out.println("As a dog, I say: ");
+    for (int i = 0; i < N; i += 1){
+        bark();
+    }
+    When the above (Dog) class has changed, we would have no idea what is causing the error!!
+}
+
+
+
+Casting and Type Checking!
+public static void main(String[] args){
+    VengefulSLList<Integer> vs1 = new VengefulSLList<Integer>(9);
+    SLList<Integer> s1 = vs1;
+ ==
+    s1.addLast(50); --> uses SLList
+    s1.removeLast(); --> Uses VengefulSLList
+
+    Compiler allows method calls based on compile-time type of variable.
+    s1.printLostItems();
+    VengefulSLList<Integer> vs12 = s1;
+    --> compilation error
+    Compiler also allows assignments based on compile-time types.
+        - Even though sl's runtime type is VengefulSLList, cannot assign to vsl2.
+        - Compiler plays it as safe as possible with type checking. Super conservative.
+        - Method calls have compile-time type equal to their declared type.
+
+        Poodle frank = new Poodle("Frank", 5);
+        Poodle frankJr = new Poodle("Frank Jr.", 15);
+
+        Dog largerDog = maxDog(frank, frankJr);
+        Poodle largerPoodle = maxDog(frank, frankJr); --> error! RHS' static type is Dog, but Dog is not necessarily a poodle!
+        We can always do casting!
+        Poodle largerPoodle = (Poodle) maxDog(frank, frankJr);
+        You are deceiving the compiler not to check the compile type! You should use it sparingly.
+
+        public static Dog maxDog(Dog d1, Dog d2){ ... }
+
+
+}
+
+Higher Order Functions: A function that takes in another function as data.
+
+def tenX(x):
+    return 10*x
+def do_twice(f, x):
+    return f(f(x))
+print(do_twice(10))
+
+
+Java w/ some Eariler Version
+Variables cannot contain pointers to functions.
+Other way: Use an interface instead. (No type for functions!)
+Define an interface (a functiony thing) --> define a class as a function! --> override the apply() method!
+
+
+/** Represent a function that takes in an integer, and returns an integer.*/
+public interface IntUnaryFunction{
+    public int apply(int x);
+}
+public class TenX implements IntUnaryFunction{
+    public int apply(int x){
+        return 10 * x;
+    }
+}
+pubic class HOFDemo{
+    public static int do_twice(IntUnaryFunction f, int x) {
+        return f.apply(f.apply(x));
+    }
+    public static void main(String[] args){
+        IntUnaryFunction tenX = new TenX();
+        System.out.println(do_twice(TenX, 2));
+    }
+}
+
+Invocation of overriden methods follows two simple rules:
+    Compiler plays it safe and only lets us do things allowed by static type.
+    For overriden methods the actual method invoked is based on dynamic type of invoking expression, e.g. Dog.maxDog(d1, d2).bark();
+    Can use casting to overrule compiler type checking.
+
+
+
+
+Dynamic Method Selection Puzzle
+A Typing Puzzle
+    Dog: has a bark() method
+    ShowDog: Extends Dog, overrides bark method
+
+   Every ShowDog is-a Dog.
+   Every Dog is-an Object.
+        All types in Java are a subtype of Object
+
+Object o2 = new ShowDog("Mortimer", "Corgi", 25, 512.2);
+
+ShowDog sdx = ((ShowDog) o2);
+sdx.bark();
+
+Dog dx = ((Dog) o2);
+dx.bark();
+
+((Dog) o2).bark();
+
+Object o3 = (Dog) o2;
+o3.bark();
+
+The RULES:
+1. Compiler allows memory box to hold any subtype.
+2. Compiler allows calls based on static type.
+3. Overriden non-static methods are selected at run time based on dynamic type.
+    Everything else is based on  static type, including overloaded methods.
+
+Static Methods, Variables, and Inheritance
+What if a subclass has variables with the sname name as a superclass?
+What if subclass has a static method with the same signature as a superclass method?
+    For static methods, we do not use the term overriding for this.
+
+Subtype Polymorphism
+Polymorphism: providing a single interface to entities of different types
+Consider
+Deque deque;
+when you call deque.addFirst(); the actual behavior is based on the dynamic type (Whatever that is) according to DSM.
+This dependence relationship (changing method based on its different types) is called subtype polymorphism.
+
+There's another approach that does this! Explicit Higher Order Functions:
+
+def print_larger(x, y, compare, stringify):
+    if (compare(x, y)):
+        return stringify(x)
+    return stringify(y)
+
+
+DIY Comparison
+Suppose we want to create a function that find us a max of an array of any type.
+What are some possible problems?
+public static Object max(Object[] items){
+    int maxDex = 0;
+    for (int i = 0; i < items.length; i += 1){
+        if (items[i] > items[maxDex]){ --> what is bigger "Object"?
+            maxDex = i;
+        }
+    }
+    return items[maxDex];
+}
+public static void main(String[] args){
+    Dog[] dogs = {new Dog("Elyse", 3), new Dog("Sture", 9), new Dog("Benjamine", 15)};
+    Dog maxDog = (Dog) max(dogs);
+    maxDog.bark();
+}
+
+How would it know what is a bigger object?
+
+-> One approach would be to leave it to the Dog class.
+public static Dog maxDog(Dog[] args) {
+    if (dogs == null || dogs.length == 0) {
+        return null;
+    }
+    Dog maxDog = dogs[0];
+    for (Dog d: dogs){
+        if (d.size > maxDog.size) {
+            maxDog = d;
+        }
+    }
+    return maxDog;
+}
+We do Dog.maxDog(dogs);
+But, what about cat, horse, or octopus?
+In Java, we can redefine a few operators to have them work in a specific context (the idea of subtype polymorphism)
+When it comes to Dog class, > would be the case we need to polymorphize.
+Remember that we can always create something that is above our hierarchy, interface.
+We can have the interface require all other hyponyms to implement in their own ways, but we can stil use the same method that was tailored in their own ways.
+In this case, compareTo. It's like using List<Item>!
+
+
+public interface OurComparable{
+    public int compareTo(Object O);
+}
+public class Dog implements OurComparable{
+    @Override
+    public int compareTo(Object o){
+        Dog uddaDog = (Dog) o;
+        if (this.size > udda.size){
+            return 1;
+        }
+        else if (this.size == udda.size){
+            return 0;
+        }
+        else{
+            return -1;
+        }
+        better?
+        return this.size - uddaDog.size;
+    }
+
+}
+public class Maximizer{
+    public static OurComparable max(OurComparable[] items){
+        int maxDex = 0;
+        for (int i = 0; i < items.length; i += 1){
+        int cmp = items[i].compareTo(items[maxDex]);
+            if (cmp > 0){
+                maxDex = i;
+            }
+        }
+        return items[maxDex];
+    }
+}
+
+
+IMPORTANT PRACTICE!
+DogLauncher.java
+public class DogLauncher {
+    public static void main(String[] args){
+        Dog[] dogs = new Dog[]{d1, d2, d3};
+        System.out.println(Maximizer.max(dogs));
+    }
+}
+
+
+Dog.java
+public class Dog implements OurComparable{
+    public int compareTo(Object o){
+        Dog uddaDog = (Dog) o;
+        return this.size - uddaDog.size;
+    }
+}
+
+Maximizer.java
+public class Maximizer {
+    public static OurComparable max(OurComparable[] items) {
+        int cmp = items[i].compareTo(items[maxDex];
+        //it goes on...
+    }
+}
+1.If we ommit compareTo in Dog.java, which file will fail?
+Dog! It is lying about being a OurComparable. It is one of the specs!
+
+2.If we omit implements keyword in Dog.java, what will fail?
+DogLauncher, because Dog is not OurComparable! Compile Error happens BEFORE anything runs. So not maximizer!
+
+The point is the Maximizer class has not specified anything, but find the max anyway, but the powerful thing is, as soon as you implement and polymorphize
+compareTo() in your own way, this whole class's functionality will get unlocked.
+
+In fact, we have a built-in interface called Comparable because OurComparable is not good for the two reasons:
+1. Awkward casting to/from Objects.
+2. We made it up.
+    - No existing classes implementing OurComparable(e.g. String, etc).
+    - No existing classes use OurComparable (e.g. no built-in max function that uses OurComparable)
+Dog.java
+public class Dog implements OurComparable{
+    public int compareTo(Object obj){
+        Dog uddaDog = (Dog) obj;
+        return this.size - uddaDog.size;
+    }
+}
+We have a built-in interface called, Comparable<T>
+
+public class Dog implements Comparable<Dog>{
+    public int compareTo(Dog uddaDog){
+        return this.size - uddaDog.size;
+    }
+}
+Maximizer.java
+public class Maximizer {
+    public static Comparable max(Comparable[] items) {
+        int cmp = items[i].compareTo(items[maxDex];
+        //it goes on...
+    }
+}
+
+We are using the real one!
+It allows us to do something like this if you polymorphize compareTo
+Dog[] dogs = new Dog[] {d1, d2, d3};
+Dog largest = Collection.max(dogs);
+
+Comparator
+We somehow want to compare other things (not just based on its size)!
+1. by name? by tusksize?
+In HOF,
+we could do something
+def print_larger(x, y, compare, stringify):
+    if compare(x,y):
+        return stringify(x)
+    return stringify
+we can pick a different compare callback.
+What do we do for
+def print_larger(T x, T y):
+    if x.largerThan(y):
+        return x.str()
+    return y.str()
+
+def print_larger(T x, T y, Comparator<T> c):
+    if c.compare(x,y):
+        return x.str()
+    return y.str()
+
+import Comparator<>
+public class Dog implements Comparable<Dog> {
+    private String name;
+    private int size;
+
+    public Dog(String n, int s){
+        name = n;
+        size = s;
+    }
+
+    public void bark(){
+        System.out.println(name + " says: bark");
+    }
+
+    public int compareTo(Dog uddaDog){
+        return this.size - uddaDog.size;
+    }
+    /** Someone that knows how to compare things: Comparator<Dog>*/
+    public (static) class NameComparator implements Comparator<Dog>{
+        public int compare(Dog a, Dog b){
+            return a.name.compareTo(b.name);
+        }
+    }
+}
+
+
+DogLauncher.java
+public class DogLauncher {
+    public static void main(String[] args){
+        Dog[] dogs = new Dog[]{d1, d2, d3};
+        System.out.println(Maximizer.max(dogs));
+
+
+
+        Dog.NameComparator nc = new Dog.NameComparator();
+        if(nc.compare(d1, d3) > 0){
+            d1.bark();
+        }
+        else {
+            d3.bark();
+        }
+    }
+
+}
+
+
+We do not actually do "new" Dog.NameComparator();
+So we just add
+public Comparator<Dog> getNameComparator(){
+    return new NameComparator();
+}
+and we do
+Comparator<Dog> nc = Dog.getNameComparator(){ -->
+
+}
+
+
+In java (in other languages, we would have done something with HOFs), we do this by wrapping up the needed function in an interface(like comparable, comparator)
+
+Comparable (compare myself to others)
+Comparator (compare two things)
+
+
+
+
+
+
+
+
+
+
