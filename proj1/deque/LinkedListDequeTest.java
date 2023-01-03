@@ -2,6 +2,7 @@ package deque;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import edu.princeton.cs.algs4.StdRandom;
 
 
 /** Performs some basic linked list tests. */
@@ -13,27 +14,24 @@ public class LinkedListDequeTest {
      *
      * && is the "and" operation. */
     public void addIsEmptySizeTest() {
-
-
         LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
 
-		assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
-		lld1.addFirst("front");
+        assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
+        lld1.addFirst("front");
 
-		// The && operator is the same as "and" in Python.
-		// It's a binary operator that returns true if both arguments true, and false otherwise.
+        // The && operator is the same as "and" in Python.
+        // It's a binary operator that returns true if both arguments true, and false otherwise.
         assertEquals(1, lld1.size());
         assertFalse("lld1 should now contain 1 item", lld1.isEmpty());
 
-		lld1.addLast("middle");
-		assertEquals(2, lld1.size());
+        lld1.addLast("middle");
+        assertEquals(2, lld1.size());
 
-		lld1.addLast("back");
-		assertEquals(3, lld1.size());
+        lld1.addLast("back");
+        assertEquals(3, lld1.size());
 
-		System.out.println("Printing out deque: ");
-		lld1.printDeque();
-
+        System.out.println("Printing out deque: ");
+        lld1.printDeque();
 
 
     }
@@ -44,16 +42,16 @@ public class LinkedListDequeTest {
 
 
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
-		// should be empty
-		assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
+        // should be empty
+        assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
-		lld1.addFirst(10);
-		// should not be empty
-		assertFalse("lld1 should contain 1 item", lld1.isEmpty());
+        lld1.addFirst(10);
+        // should not be empty
+        assertFalse("lld1 should contain 1 item", lld1.isEmpty());
 
-		lld1.removeFirst();
-		// should be empty
-		assertTrue("lld1 should be empty after removal", lld1.isEmpty());
+        lld1.removeFirst();
+        // should be empty
+        assertTrue("lld1 should be empty after removal", lld1.isEmpty());
 
     }
 
@@ -84,8 +82,8 @@ public class LinkedListDequeTest {
     public void multipleParamTest() {
 
 
-        LinkedListDeque<String>  lld1 = new LinkedListDeque<String>();
-        LinkedListDeque<Double>  lld2 = new LinkedListDeque<Double>();
+        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        LinkedListDeque<Double> lld2 = new LinkedListDeque<Double>();
         LinkedListDeque<Boolean> lld3 = new LinkedListDeque<Boolean>();
 
         lld1.addFirst("string");
@@ -133,4 +131,149 @@ public class LinkedListDequeTest {
 
 
     }
+
+    @Test
+    public void randomizedIntegerTest() {
+        /* Testing Methods:
+            0. addFirst
+            1. addLast
+            2. size
+            3. isEmpty
+            4. get
+            5. getRecursive
+            6. equals()
+            7. removeFirst --> Can't be called when size == 0
+            8. removeLast --> Can't be called when size == 0
+         */
+        int testSize = 100000;
+        LinkedListDeque<Integer> lst1 = new LinkedListDeque<Integer>();
+        LinkedListDeque<Integer> lst2 = new LinkedListDeque<Integer>();
+
+        for (int i = 0; i < testSize; i++) {
+            int opNum = StdRandom.uniform(9);
+            int val = StdRandom.uniform(testSize);
+            if (lst1.size() < 0) {
+                opNum = StdRandom.uniform(7);
+            }
+            //addFirst() test
+            if (opNum == 0) {
+                lst1.addFirst(val);
+                lst2.addFirst(val);
+            }
+            //addLast() test
+            else if (opNum == 1) {
+                lst1.addLast(val);
+                lst2.addLast(val);
+            }
+            //size() test
+            else if (opNum == 2) {
+                assertEquals(lst1.size(), lst2.size());
+            }
+            //isEmpty() test
+            else if (opNum == 3) {
+                assertEquals(lst1.isEmpty(), lst2.isEmpty());
+            }
+            //get() test
+            else if (opNum == 4) {
+                assertEquals(lst1.size(), lst2.size());
+                int index = StdRandom.uniform(lst1.size() + 1);
+                assertEquals(lst1.get(index), lst2.get(index));
+            }
+            //getRecursive() test
+            else if (opNum == 5) {
+                assertEquals(lst1.size(), lst2.size());
+                int index = StdRandom.uniform(lst1.size() + 1);
+                assertEquals(lst1.getRecursive(index), lst2.getRecursive(index));
+            }
+            //equals()
+            else if (opNum == 6) {
+                assertEquals(lst1,lst2);
+            }
+            //removeFirst()
+            else if (opNum == 7) {
+                assertEquals(lst1.removeFirst(), lst2.removeFirst());
+                assertEquals(lst1.size(), lst2.size());
+            }
+            //removeLast()
+            else {
+                assertEquals(lst1.removeLast(), lst2.removeLast());
+                assertEquals(lst1.size(), lst2.size());
+            }
+
+
+        }
+    }
+    @Test
+    public void randomizedStringTest() {
+        /* Testing Methods:
+            0. addFirst
+            1. addLast
+            2. size
+            3. isEmpty
+            4. get
+            5. getRecursive
+            6. equals()
+            7. removeFirst --> Can't be called when size == 0
+            8. removeLast --> Can't be called when size == 0
+         */
+        int testSize = 100000;
+        LinkedListDeque<String> lst1 = new LinkedListDeque<>();
+        LinkedListDeque<String> lst2 = new LinkedListDeque<>();
+
+        for (int i = 0; i < testSize; i++) {
+            int opNum = StdRandom.uniform(9);
+            double randVal = Math.random();
+            String val = String.valueOf(randVal);
+            if (lst1.size() < 0) {
+                opNum = StdRandom.uniform(7);
+            }
+            //addFirst() test
+            if (opNum == 0) {
+                lst1.addFirst(val);
+                lst2.addFirst(val);
+            }
+            //addLast() test
+            else if (opNum == 1) {
+                lst1.addLast(val);
+                lst2.addLast(val);
+            }
+            //size() test
+            else if (opNum == 2) {
+                assertEquals(lst1.size(), lst2.size());
+            }
+            //isEmpty() test
+            else if (opNum == 3) {
+                assertEquals(lst1.isEmpty(), lst2.isEmpty());
+            }
+            //get() test
+            else if (opNum == 4) {
+                assertEquals(lst1.size(), lst2.size());
+                int index = StdRandom.uniform(lst1.size() + 1);
+                assertEquals(lst1.get(index), lst2.get(index));
+            }
+            //getRecursive() test
+            else if (opNum == 5) {
+                assertEquals(lst1.size(), lst2.size());
+                int index = StdRandom.uniform(lst1.size() + 1);
+                assertEquals(lst1.getRecursive(index), lst2.getRecursive(index));
+            }
+            //equals()
+            else if (opNum == 6) {
+                assertEquals(lst1,lst2);
+            }
+            //removeFirst()
+            else if (opNum == 7) {
+                assertEquals(lst1.removeFirst(), lst2.removeFirst());
+                assertEquals(lst1.size(), lst2.size());
+            }
+            //removeLast()
+            else {
+                assertEquals(lst1.removeLast(), lst2.removeLast());
+                assertEquals(lst1.size(), lst2.size());
+            }
+
+
+        }
+    }
 }
+
