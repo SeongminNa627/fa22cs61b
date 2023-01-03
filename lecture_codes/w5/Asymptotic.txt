@@ -1,0 +1,222 @@
+Efficiency comes in two flavors:
+	1. Programming cost (course to date)
+	   - How long does it take to code?
+	2. Execution cost
+	   - Example:
+	   Deterimine if a sorted array contains any duplicates:
+
+	   (-3, -1, 2, 4, 4, 8, 10, 12)
+
+	   - Silly algorithm: compare every possible pair
+	   - Better: compare just the adjacent element.
+
+
+	   - characterize the runtimes:
+	     @Program 1
+	     - public static boolean dup1(int[] A){
+	     	for (int i = 0; i < A.length; i ++){
+	     		for (int j = i + 1; j < A.length; j ++){
+	     			if (A[i] == A[j]){
+	     				return true;
+	     			}
+	     		}
+	     	}
+	     	return false;
+	      }
+         @Program 2
+	     - public static boolean dup2(int[] A){
+	       for (in i = 0; i < A.length - 1; i +=1){
+		     	if (A[i] == A[i + 1]){
+		     		return true;
+		     	}
+	     	}
+	     	return false;
+	      }
+
+
+	    1. Number of For loops?
+	    2. Measuring time?
+	    	- You could do that!
+			    	
+			    	N ------ dup1 ------ dup2
+			    10000 ------ 0.08 ------ 0.08
+			    50000 ------ 0.32 ------ 0.08
+			   100000 ------ 1.00 ------ 0.08
+			   200000 ------ 8.26 ------ 0.1
+			   400000 ------ 15.4 ------ 0.1
+			Pro. Easy to measure.
+			Con. Take some times
+			     It may matter what computer you are running it on.
+			     What compiler?
+			     What input data?
+
+	    3. Count Possible Operations
+
+	    Program 1
+
+		    Program 1 (N = 10000)
+		    ------------------------------------
+		    i = 0            --> 1 
+		    j = i + 1        --> 1 to 10000
+		    less than (<)    --> 2 to 50,015,001
+		    increment (++)   --> 0 to 50,005,000
+		    equals(==)       --> 1 to 49,995,000
+		    array accesses   --> 2 to 99,990,000
+
+		    1. Good: Machine independent. Input dependence captured in model.
+		    2. Bad: Tedious to compute. Array size was arbitrary. Doesn't tell you actual time.
+
+		    Program 1 (N = n)
+		    ------------------------------------
+		    i = 0            --> 1 
+		    j = i + 1        --> 1 to n
+		    less than (<)    --> 2 to (n^2 + 3n  + 2)/2
+		    increment (++)   --> 0 to (n^2 + n)/2 
+		    equals(==)       --> 1 to (n^2 - n)/2
+		    array accesses   --> 2 to (n^2 - n)
+
+
+		    1. Good: Machine independent. Input dependence captured in model.
+		    2. Bad: Even more tedious to compute. Doesn't tell you actual time.
+
+
+	   Program 2
+ 			Program 1 (N = 10000)
+		    ------------------------------------
+		    i = 0            --> 1 
+		    less than (<)    --> 0 to 10000 
+		    increment (++)   --> 0 to 9999
+		    equals(==)       --> 1 to 9999
+		    array accesses   --> 2 to 19998
+
+			Program 1 (N = n)
+		    ------------------------------------
+		    i = 0            --> 1 
+		    less than (<)    --> 0 to n
+		    increment (++)   --> 0 to n-1
+		    equals(==)       --> 1 to n-1
+		    array accesses   --> 2 to 2(n-1)
+
+
+	    Which is better and why?
+	    	As N increases Program 2 takes fewer operations to do the same work. Scales better!
+	    	We only care about what happens for large N
+	    		Simulation o fbillions of interacting particles.
+	    		Social network with billions of users.
+	    		Logging of billions of transactions.
+
+	    Say zerp1 takes 2n^2 operations
+	    	zerp2 takes 6000n operations
+	    For small N, zerp1 might be faster, but for larger N, no way.	
+
+	    Scale --> Order of growth (the shape of the graph)
+
+	    Let's do some simplification.
+
+	    @Program 1 
+			    Program 1 (N = n)
+			    ------------------------------------
+			    i = 0            --> 
+			    j = i + 1        --> n
+			    less than (<)    --> (n^2 + 3n  + 2)/2
+			    increment (++)   --> (n^2 + n)/2 
+			    equals(==)       --> (n^2 - n)/2
+			    array accesses   --> (n^2 - n)
+
+			 1. No best case
+
+			 2. Pick some representative operation to act as a proxy for the overall runtime.
+
+				@Program 1
+			     - public static boolean dup1(int[] A){
+			     	for (int i = 0; i < A.length; i ++){
+			     		for (int j = i + 1; j < A.length; j ++){ ->>>>> i + 1!!!
+			     			if (A[i] == A[j]){
+			     				return true;
+			     			}
+			     		}
+			     	}
+			     	return false;
+			      }
+
+			 3. Ignore lower order term
+
+			 4. Ignore multiplicative constants.
+
+	    @Program 2???
+
+
+
+
+	    Simplified Analysis Process
+	    1. Choose the cost model.
+
+	    2. Figure out the order of growth for the count of the representative operation
+
+
+	    @Program 1
+	    1. Choose == 
+	    	i
+	    j      ==   ==  ==  ==  ==  ==
+	    			== 	== 	==	==  ==
+	    			    ==  ==  ==  ==
+	    			        ==  ==  ==
+	    			            ==  == 
+	    			                ==
+
+
+	   This will be (n^2)/2 for geometric reason
+
+
+
+	   Formalizing Order of Growth
+	   1. No best case
+	   2. Pick the nice cost model
+	   3. Ignore Lower order term
+	   4. Ignore multiplicative constants.
+
+	   - Big Theta
+	     1. Suppose we have a function R(N) with order of growth f(N).
+	     	in  Big-theta notation we write this as R(n) belongs to O(f(n))
+
+	     	R(N) belongs to O(f(n))
+	     	k1 * f(N) <= R(N) <= k2*f(N) for all values of N greater than some N0
+
+	   - Big O 
+	   	 1. Big O is less than
+	   	 2. O(n) < 0(n^2).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

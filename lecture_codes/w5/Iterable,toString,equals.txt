@@ -1,0 +1,327 @@
+1. Sets:
+
+	So far we built two types of list: AList and SLList
+		in python:
+		L = []
+		L.append(3)
+		L.append(4)
+		L.append(5)
+
+		in actual Java:
+		java.util.List<Integer> L = new java.util.ArrayList<>();
+		L.add(5); 
+		L.add(10);
+
+		A bit verbose{
+			import java.util.ArrayList (canonical name):
+			List<Integer> L = new ArrayList<>();
+		}
+
+	Set stores a set of values with no duplicates. Has no sense of order
+
+		Set<String> S = new HashSet<>();
+		S.add("Tokyo");
+		S.add("Beijing");
+		S.add("Lagos");
+
+		System.out.prinln(S.contains("Tokyo"));
+
+		Create a class ArraySet with the following methods:
+			add(value): Add the value to the set if it is not already present.
+			contains(value): Checks to see if ArraySet contains the key.
+			size(): Returns number of values.
+
+
+
+		public class ArraySet<T>{
+
+			private T[] items;
+			private int size; // the next item to be added will be at size
+
+			public ArraySet(){
+				items = (T[]) new Obejct[100];
+				size = 0;
+
+			}
+
+			public boolean contains(T x){
+				for (int i = 0; i <size; i ++){
+					if (x.equals(items[i]){
+						return true;
+					}
+				}
+				return false;
+			} 
+
+			public void add(T x){
+			// make sure that x is not in the lis 
+			if (contains(x))
+				return;
+			}
+			items[size] = x;
+			size ++;
+
+			public int size(){
+				return size;
+			}
+
+			public static void main(String[] args){
+				ArraySet<String> S = new ArraySet<>();
+
+				s.add("horse");
+				s.add("fish");
+				subtle bug: //s.add(null) does not work!!!!!!!
+			}
+
+		}
+
+
+		adding null won't work because of if (x.equals(items[i])) line in contains. It would be calling equals on null!
+		It will raise this NullPointerException.
+
+
+		Exception:
+
+		Implicit, Accidental, Incidental exception: all referring to the excetion raised because it stops the flow of control 
+
+			So, one easy fix for this is to raise an exception when user tries to put in null in the ArraySet.
+			if (x == null){
+				throw new IllegalArgumentException("Cannot add null!");
+			}
+			We do not want our code just crashes in the middle of something, so we can "catch" the exception that is about to be thrown out there.
+
+		Explicit Exception:
+			1. Ignores null
+			2. Refactor contains() so that it does not crash when null is input.
+			if (items[i] == null){
+				if (x == null){
+					return true;
+				}
+			}
+
+		Iteration:
+		make our ArraySet suppor the syntax like:
+			ArraySet<Integer> javaset = new ArraySet<>();
+			javaset.add(5);
+			javaset.add(6);
+			javaset.add(7);
+
+			for (int i: javaSet){
+				System.out.println(i);
+			}
+
+
+		1. Ugly Iteration!
+
+			import java.util.Iterator;
+
+			public static void main(String[] args){
+				Set<Integer> javaset = new HashSet<>();
+				javaset.add(5);
+				javaset.add(23;
+				javaset.add(42);
+
+				Iterator<Integer> seer = javaset.iterator(); --> Wizard
+
+				while (seer.hasNext()){ (Hey, Wizard, do you have anything else?)
+					int i = seer.next();
+					System.out.println(seer.next()); (next() --> spit the value that the wizard is looking at, and advance him to the next -> 5! and moves to 42).  
+				}
+
+
+			}
+			What do we need for this ugly implementation to run? 
+			1. Does the set interface have an iterator() methods? --> true
+			2. Does the set interface have next/hasNext() methods? --> x
+			3. Does the iterator interface have an iterator method? --> x
+			4. Does the iterator interface have next/hasNext() method? --> true
+
+			To support the ugly iteration: 
+				Add an iterator() method to ArraySet that returns an Iterator<T> 
+				The iterator<T> that we return should have a useful hasNext() and next() method.
+
+				public interface Iterator<T>{
+					boolean hasNext();
+					T next();
+				}
+
+				public static void main(String[] args){
+					ArraySet<Integer> aset = new ArraySet<>();
+					aset.add(5);
+					aset.add(23);
+					aset.add(42);
+
+					Iterator<Integer> aseer = aset.iterator();
+					while (aseer.hasNext()){
+						int i  = aseer.next();
+						System.out.println(i);
+					}
+				}
+				public Iterator<Iteger> iterator(){
+					return new ArraySetIterator();
+				}
+
+				private class ArraySetIterator implements Iterator<T>{
+					private int wizPos;
+					public ArraySetIterat(){
+						wizPos = 0;
+					}
+					public boolean hasNext(){
+						return wizPost < size;
+
+					}
+					public T next(){
+						T returnItem = items[wizPos];
+						wizPos ++; 
+						return returnItem;
+					}
+				}
+
+		2. Nice Iteration.
+		Just state that you have a method that returns a iterator! Implement Iterable<T>():
+
+		ArraySet implements Iterable<T> --> Forces ArraySet to have iterator().
+		iterator() --> forces it to return a Iterator<T> data type.
+		ArraySetIterator implements Iterator<T> --> forces the iterator has hasNext(), and next();
+
+
+
+		Interface Iterable<T>{
+			public Iterator<T> iterator();
+		}
+
+
+
+	toString() method
+
+	All classes are hyponyms of Object
+		String toString()
+		boolean equals(Object obj)
+		Class<?> getClasss()
+		int hashCode()
+
+		toString method: if we use System.out.prtinln(Object x) --> will call  x.toString();
+
+
+		@Override
+		public String toString(){
+			String returnString = "{";
+			// for (int i = 0; i < size -1; i +=1 ){
+				returnString += items[i].toString();
+				returnString += ", ";
+			}
+			for (T item: this){
+				returnString += item; (toString() of item gets called)
+				returnString += ", ";
+			}
+			returnString += "}";
+			return returnString
+		}
+
+
+		This concatenation of String is slow because we are basically recreating Strings with a letter disimilar 
+
+		We use StringBuilder.
+
+		StringBuilder returnSB = new StringBuilder("{");
+		returntSB.append(items[i]);
+		return returnSB.toString();
+
+
+
+	.equals() method
+	== and equals() are not the same!!
+
+	== compares the memorybox(reference).
+	.equals(Object obj) compares the semantic meaning of the object, which is what we want.
+
+	for Arrays, use Arrays.equal or Arrays.deepEquals
+
+	this: Address of Current Object.
+
+		in the same class, "this" is not mandatory!
+		However consider the following:
+		When naming conflict with local variable. 
+		private int size = 0;
+		public Dog(int size){
+			size = size --> It does nothing!
+		}
+		//instead 
+		public Dog(int size){
+			this.size = size;
+		}
+
+	by default:
+	public boolean equals(Object obj){
+		return this == obj;
+	}
+
+
+	@Override
+	public boolean equals(Object obj){
+		if (o instanceof Dog uddaDog){
+			// 1. Checks to see if o's dynamic type is Dog (or one of its subtypes).
+			// 2. Casts o into a variable of static type Dog called uddaDog.
+			// 3. Works correctly, even if o is null.
+			// 4. Brand New java syntax!
+			return this.size == uddaDog.size;
+		}
+		return false;
+	}
+
+
+	If we do not say Object obj --> will not run because of DMS.
+
+
+	public boolean equals(Object obj){
+		if (this == other) {return true;} // for the sake of optimization.
+		if (o instanceof ArraySet oas){
+			if (oas.size != this.size){
+				return false;
+			}
+			for (T x: this){
+				if (!oas.contains(x)){
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	Fancier toString and ArraySet.of
+
+	public toString(){
+		List<String> listOfItems = new ArrayList<>();
+		for (T x: this){
+			listOfItems.add(x.toString());
+		}
+		return "{" + String.join(",",listOfItems); + "}"
+
+	}
+
+	publcic static <Something> ArraySet<Something> of(<Something>...args){
+		ArraySet<Something> returnSet = new ArraySet<Someting>();
+		for (Something x: args){
+			returnSet.add(x);
+		}
+		return returnSet;
+	}
+	ArraySEet.of("hi", "I'm", "here");
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
