@@ -1,0 +1,160 @@
+Disjoint Sets
+1. Deriving the Disjoint Sets data structure for solving the dynamic connectivity problem. We will see:
+	- How a data structure design can evolve from basic to sophisticated.
+	- How our choice of underlying abstraction can affect asymptotic runtime and code complexity
+
+
+
+2. Two Operations.
+	- connect(x,y): connects x and y
+	- isConnected(x,y): returns true if x and y are connected. connections can be transitive. They do not need to be directed.
+
+
+
+	ex) 
+	connect(china, vietnam)
+	connect(china, mongolia)
+	isConnected(Vietnam, Monglia) True
+	connect(USA, Canada) 
+	isConnected(USA, Mongolia) False
+	connect(China, USA)
+	isConnected(USA, Mongolia) True
+
+
+	Naive Approach 
+	1. Connecting two things: Record every single connecting line in some data structure.
+	2. Checking connectedness: do some sort of (?) iteration over the lines to see if one thing can be reached from the other.
+
+	Better Approach (Connected Components) 
+	{0, 1, 2, 4}, {3,5}, {6}
+	1. Keep track of sets! 
+	- What Data Structures?
+		#idea 1: List<Set<Integer>>
+		- Complicated and slow
+			- Operations are linear when number of connections are small.
+			- By deciding to use a list of sets, we have doomed ourselves to complexity and bad performance.
+
+		#idea 2: List of Integers -> QuickFind
+		Assign each set an id number.
+		Utilizing the index of an array, treat it as an actual element of the set.
+		Store the id number at corresponding index number.
+
+		{0, 1, 2, 4}, {3, 5}, {6}
+		      4          5     6
+		int[] id = {4, 4, 4, 5, 4, 5, 6}
+			- connect(p, q): Change entries that equal id[p] to id[q] --> Very slow
+			- isConnected(p, q): id[p] == id[q]
+
+
+
+
+
+		So far: 
+
+
+		Implementation | constructor | connect | isConnected
+		ListOfSetsDS   |    0(n)     |   O(n)  |      O(n)
+            QuickFindDS   |    0(n)     |   0(n)  |      0(1)
+
+
+         	#Improvement
+
+         	Assign each item a parent (instead of id). Results in a tree-like shape.
+         		An innocuous sounding, seemingly arbitrary solution.
+         		Unlocks a pretty amazing unverse of math that we won't discuss.
+
+
+
+         	1. Any root should be -1
+
+
+         	for example) {0, 1, 2, 4}, {3, 5}, {6}
+
+         	id = [-1, 0, 1, -1, 0, 3, -1]
+
+         	How should we cahnge the parent list to handle this connect operation?
+         		If you're not sure where to start, consider: why can't we. ust set id[5] to. 
+         	1. connect(5,2)
+         		- Find root(5). return 3
+         		- Find root(2). return 0
+         		- set root(5)'s root to be root(2).
+
+         	-> This could be an expansive operation when the set is linearly large!
+         	-> ex) 
+         		connect(4,3)
+         		connect(3,2)
+         		connect(2,1)
+         		connect(1,0)
+         	For N items, what's the worst case runtime...
+         		For connect(p,q)?
+         		For isConnected(p,q)?
+         		-> both can be worse! 0(N), 0(N)
+
+        Implementation | constructor | connect | isConnected
+		ListOfSetsDS   |    0(n)     |   O(n)  |      O(n)
+         QuickFindDS   |    0(n)     |   0(n)  |      0(1)  -> connect is slow (Change every entry with the same entry's id)
+         QuickUnionDS  |    0(n)     |   O(n)  |      O(n)  -> trees can get tall
+
+
+
+         	#WeightedQuickUnion (Connected in a way that the tree does not get too tall)
+         	- track the size of tree (number of elements in a connected components)
+         	- Always link root of smaller tree to larger tree
+
+         		- ex) if we call connect(3, 8), which entry (or entries) of parent[] changes?
+         		parent = [-1, 0, 0, 0, 0, 0 , -1, 6, 6, 8]
+
+         		A. parent[3]
+         		B. parent[0]
+         		C. parent[8]
+         		D. parent[6] --> answer!
+
+            - Why not hight?: later.
+
+            - Implementation
+            1. isConnected(int p, int q) -> no need to change.
+            2. connect(int p, int q)
+            	- see the disjoint sets lab for the full details.
+            	- two common approaches:
+            	- Use values other than -1 in parent array for root nodes to track size.
+            	- Create a separate size array parallel to the parent array.
+
+           - Performance
+           1. Worst case where the tree height grows as fast as possible.
+           ->  0(log(N)) 	
+
+
+           Implementation | constructor | connect | isConnected
+		ListOfSetsDS   |    0(n)     |   O(n)  |      O(n)
+         QuickFindDS   |    0(n)     |   0(n)  |      0(1)  -> connect is slow (Change every entry with the same entry's id)
+         QuickUnionDS  |    0(n)     |   O(n)  |      O(n)  -> trees can get tall
+ WeightedQuickUnionDS  |    0(n)     |0(log(n))|    0(log(n))
+
+
+ 		   -> HeightedQuickUnionDS -> basically the same performance but more work.
+
+
+
+ 		   #WQU w/ Path Compression
+
+ 		   Suppose M operations on N elements of DS
+ 		   - Naive Approach -> O(MN)
+ 		   - Best  Approach -> O(N + MlogN)
+
+
+ 		   - Whenever we climb up the WQU, once we found out that 15's parent is 0, and if we can set the parent of every element's parent along the way to get to 0 to be 0, it will save so much time.
+ 		   -> memoization, caching
+ 		   -> over time the cost will get significantly cheaper.
+
+ 		        Implementation | constructor | connect | isConnected
+			ListOfSetsDS   |    0(n)     |   O(n)  |      O(n)
+	         QuickFindDS   |    0(n)     |   0(n)  |      0(1)  -> connect is slow (Change every entry with the same entry's id)
+	         QuickUnionDS  |    0(n)     |   O(n)  |      O(n)  -> trees can get tall
+	 WeightedQuickUnionDS  |    0(n)     |0(log(n))|    0(log(n))
+ WeightedQuickUnionDS/WPC  |    0(n)     |0(log(n))|    0(N + Ma(N))
+
+
+
+
+
+
