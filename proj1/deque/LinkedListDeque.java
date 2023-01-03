@@ -58,6 +58,11 @@ public class LinkedListDeque<T> implements Iterable<T> {
     }
     private Node sentinel;
     private int size;
+
+
+
+
+
     public void addFirst(T item){
         Node newNode = new Node(null, item, null);
         newNode.prev = sentinel;
@@ -120,7 +125,9 @@ public class LinkedListDeque<T> implements Iterable<T> {
         }
         return item;
     }
-
+    public void printDeque(){
+        System.out.println(this);
+    }
     @Override
     public boolean equals(Object o){
         if (o instanceof LinkedListDeque cmpL) {
@@ -142,9 +149,6 @@ public class LinkedListDeque<T> implements Iterable<T> {
         }
         return false;
     }
-    public void printDeque(){
-        System.out.println(this);
-    }
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder("{");
@@ -156,12 +160,10 @@ public class LinkedListDeque<T> implements Iterable<T> {
         sb.append("}");
         return sb.toString();
     }
-
     @Override
     public Iterator<T> iterator(){
         return new LLDequeIterator(this);
     }
-
     public T getRecursive(int index){
         return getHelper(index, sentinel.next);
     }
@@ -174,6 +176,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         }
         return getHelper(index - 1, curr.next);
     }
+
 
     public LinkedListDeque(){
         sentinel = new Node(null, null , null);
