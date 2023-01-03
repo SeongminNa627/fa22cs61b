@@ -1,7 +1,6 @@
 package deque;
 
-import java.util.LinkedList;
-
+import java.util.*;
 /**
  * @author Seongmin Na
  * @Date 11.04.2022
@@ -18,7 +17,7 @@ import java.util.LinkedList;
  * For example, if you add 10,000 items to the deque, and then remove 9,999 items, the resulting memory usage should amount to a deque with 1 item, and not 10,000.
  * Remember that the Java garbage collector will "delete" things for us if and only if there are no pointers to that object.
  */
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Iterable<T> {
     private class Node{
         public Node prev;
         public T item;
@@ -30,9 +29,35 @@ public class LinkedListDeque<T> {
             next = n;
         }
     }
+    private class LLDequeIterator<T> implements Iterator<T>{
+        private LinkedListDeque lst;
+        private Node curr;
+        private int pos;
+
+        public LLDequeIterator(LinkedListDeque<T> list) {
+            lst = list;
+            pos = 0;
+            curr = lst.sentinel.next;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return pos < lst.size();
+        }
+        @Override
+        public T next() {
+            if (hasNext()){
+                T item = (T) curr.item;
+                curr = curr.next;
+                pos ++;
+                return item;
+            }
+            return null;
+        }
+
+    }
     private Node sentinel;
     private int size;
-
     public void addFirst(T item){
         Node newNode = new Node(null, item, null);
         newNode.prev = sentinel;
@@ -86,51 +111,75 @@ public class LinkedListDeque<T> {
         if (index >= size || index < 0){
             return null;
         }
-        Node p = sentinel;
+        Node p = sentinel.next;
         T item = null;
-        while (index != 0){
+        while (index >= 0){
             item = p.item;
             p = p.next;
+            index --;
         }
         return item;
     }
+
+    @Override
     public boolean equals(Object o){
-        if (o instanceof LinkedListDeque) {
+        if (o instanceof LinkedListDeque cmpL) {
             LinkedListDeque thisL = this;
-            LinkedListDeque cmpL = (LinkedListDeque) o;
+            Node thisNode = this.sentinel.next;
+            Node  cmpNode = cmpL.sentinel.next;
             if (thisL.size != cmpL.size) {
                 return false;
-            } else {
-                Node thisNode = this.sentinel;
-                Node  cmpNode = cmpL.sentinel;
-                while (thisNode.next != this.sentinel || cmpNode.next != cmpL.sentinel) {
-                    if(!thisNode.item.equals(cmpNode.item)) {
-                        return true;
-                    }
-                    thisNode = thisNode.next;
-                    cmpNode = cmpNode.next;
-                }
-                return true;
             }
-        } else {
-            return false;
+            for (int i = 0; i < this.size(); i ++ ){
+                 if (!thisNode.item.equals(cmpNode.item)){
+                     return false;
+                 }
+                 thisNode = thisNode.next;
+                 cmpNode = cmpNode.next;
+            }
+
+            return true;
         }
+        return false;
     }
+    public void printDeque(){
+        System.out.println(this);
+    }
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder("{");
+        for (T item: this){
+            sb.append(item);
+            sb.append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append("}");
+        return sb.toString();
+    }
+
+    @Override
+    public Iterator<T> iterator(){
+        return new LLDequeIterator(this);
+    }
+
+    public T getRecursive(int index){
+        return getHelper(index, sentinel.next);
+    }
+    private T getHelper(int index, Node curr){
+        if (index < 0 ){
+            return null;
+        }
+        if (index == 0){
+            return curr.item;
+        }
+        return getHelper(index - 1, curr.next);
+    }
+
     public LinkedListDeque(){
-        sentinel = new Node(null, (T) new Object() , null);
+        sentinel = new Node(null, null , null);
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
         size = 0;
     }
-    public T getRecursive(int index){
-        return null;
-    }
-    public static void main(String[] args){
-        LinkedListDeque<Integer> L = new LinkedListDeque<Integer>();
-        L.addFirst(2);
-        L.addFirst(3);
-        L.addLast(4);
-
-        }
-    }
 }
+
