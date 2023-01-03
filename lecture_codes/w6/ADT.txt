@@ -1,0 +1,189 @@
+Abstract Data Type
+
+EX) Interface: List61B
+had many different implementation.
+
+Disjoint Sets: 
+Many different implementations.
+
+
+Implementation -> distict thing apart from Interface.
+
+
+
+ADT is defined by its operations only. Not Implementation.
+EX) Stack ADT
+ - push(int x):puts x on top of the stack
+ - int pop(): removes and returns the top item from the stack
+
+Implementation: LinkedList vs Array? Both work!
+
+
+EX) GrabBag ADT
+- insert(int x): insert x into the grab bag
+- remove(): removes a random item from the bag
+- int sample(): samples a random item from the bag(without removing!)
+- int size(): number of items in the bag
+
+Implementation: LinkedList vs Array? Array!
+
+
+In JAVA: Things like 
+List<Integer> = new ArrayList<>();
+----------------------------------
+ADT           -> Implementation
+
+ADTs in JAVA -> 
+Collection Interface
+1. List Interface
+	- LinkedList implementation
+	- ArrayList implementation
+2. Set Interface
+	- HashSet...
+	- TreeSet
+3. Map Interface
+	- HashMap
+	- TreeMap
+
+
+!!!Binary Search Tree!!!
+
+Suppose we have an OrderedLinkedListSet<Character>
+
+sentinel -> A -> B -> C -> D -> E -> F -> G 
+in this case, contain() and add() are slow.
+
+Fix 1: add some express lanes (B -> E or C -> G)?
+Fix 2: we can move the pointer to middle!
+            sent           
+             |
+A<- B <- C<- D-> E -> F -> G->
+
+We can even do better by recursively applying!
+
+
+           sent
+            D
+         B     F
+      A    C  E   G
+
+
+Tree
+1. A set of nodes
+2. A set of edges that connect those nodes.
+   - Constraint: There is exactly one path between any two nodes -> everything is connected -> not a tree.
+   
+- Rooted Tree
+1. Every node N except the root has exactly one parent, defined as the first node on the path from N to the root
+2. A node with no child is leaf
+3. Binary Tree -> every node has either 0, 1, or 2 children (subtrees). 
+
+- Binary Search Tree
+- For every key in the left subtree is less than X's key.
+- Every key in the right subtree is greater than X's key.
+- Ordering must be complete, transitive, and antisymmetric.
+	1. Exactly one or the other (p < q and q < p) is true
+	2. p <q and q <r -> p < r
+
+- Operations!
+	1. searchKey equals T.key, return.
+		- if searchKey < T.key, search T.left
+		- if searchKey > T.key, search T.right
+		- Do this recurisvely!
+
+		- Runtime?
+			-> log(N)! (Worst Case): Amazingly fast
+    2. insert
+    	- search for the key first.
+    	- nothing found -> create new node, set appropriate link
+    		static BST insert(BST T, key ik){
+    			if (T == null)
+    				return new BST(ik);
+    			if (ik < T.key)
+    				T.left = insert(T.left, ik);
+    			else if (ik > T.key)
+    				T.right = insert(T.right, ik);
+    			return T;
+    		}
+
+    		Common mistke:
+    		if (T.left == null)
+    			T.left = new BST(ik);
+    		else if (T.right == null)
+    			T.right = new BST(ik);
+
+    3. Delete
+    	- Deletion key has no children
+    		1. just sever the parent's link
+    	- Deletion key has one child
+    		1. have the parent of being deleted point to its child
+    	- Deletion key has two chidren
+    		1. left child's right child is going to replace what is being deleted -> Hibbard Deletion (must be a node that is > than everything in left subtree)
+    		2. right child's left child is going to replace what is being deleted -> Hibbard Deletion (must be a node that is < than everything in right subtree)
+    		****Important***
+    		- Once either predecessor or successor replaces the grandparent's place, 
+    		no need to worry that the predecessor or successor could have two children again. 
+    			- They won't be because if that is the case, it would have never been the pred or succ in the first place.
+
+
+We can represent a set using BST!
+What about Map?
+- We can have the node of BST keeps track of both key and value.
+
+Tips:
+For each public method, create a private recursive method for put
+When inserting, always set left/right pointers, even if nothing is actually changing.
+Avoid arms length base cases, don't check if lef or right is null!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
