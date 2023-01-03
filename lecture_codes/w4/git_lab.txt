@@ -1,0 +1,228 @@
+Git is a distributed version control system
+Version Control: Version of the file in different point in time
+
+by taking the series of snapshot of the current state of a directory, we can float around the history of the snapshots.
+
+mkdir recipes
+cd recipes
+git init --> recipes becomes a repository
+touch pbj.txt
+Echo "test test" >> pbj.txt (through the string into pbj.txt)
+
+we want to create a new recipe with the template, but everything got changed.
+So, what we can do here is that we can open up the log by git log and grab the ID that we want to retrieve
+
+git checkout e9b5eedc2ab80b2f06c286dca5a51f67edfe790c
+
+copy what you want and go back to the master
+
+
+git checkout master
+
+
+
+
+
+-- what is happening! --
+
+git init --> starts tracking the two objects Staging Area and Commits
+
+Recipes------------------
+pbj.txt
+
+
+
+-------------------------
+Staging Area
+(git add pbj.txt)-> pbj.txt
+
+
+
+-------------------------
+Commits
+(git commit pbj.txt) -> pbj.txt
+
+
+
+
+git add <File Name> 
+-> put <File Name> into staging area.
+
+git status
+-> checks <File Name> is the same as what is in the directory or commits
+
+git commit <File Name>
+-> 1. Clone the most recent commit (or HEAD commit).
+-> 2. New Commit (with different meta data)
+-> 3. Use what is in the staging area to edit the newly created commit
+-> 4. Advance HEAD and master pointers to the new commit.
+
+HEAD: points to what the most current branch is pointing at. (There could be multiple branches)
+master: default branch that we get when creating a new commit. A pointer pointing to the tip of this branch 
+* Once something is committed, it is going to be tracked in all the future commits that comes after.
+* Before committing, git will check if what is staged is how different from the most recent commit.
+* Checkout command will control the HEAD pointer.
+* Git will not allow us to checkout if our PWD is not clean state.
+
+The process of commit:
+1. Copy the current commit
+2. When we add
+
+
+
+
+
+
+Distributed VCS?
+
+What we have been working on is local repository. But we can share this repository with many people!
+
+CS staff makes the remote repository -> 
+
+
+
+
+
+git clone <repo url> -> clone <repo url> into my own machine.
+* we get two pointers:
+1. origin/master -> the master pointer of origin (where it actually is).
+2. master -> master branch as a something that resides in my own machine
+
+
+* if I say git remote -v: it will give us the status of origin
+origin https://asdlfjaskdfjaskdft.git (fetch) -> we can grab things from it
+origin https://asdlfjaskdfjaskdft.git (push) -> we can push things to it
+
+idea lab01/Collatz.java
+
+
+
+* git push origin master
+ -> master pointer has been marching forward to the most current commits!
+ -> push everything to the origin from everything we have got in (local) master.
+ -> if you want to push anything, you need to commit first! Or, it is not going to track anything.
+
+
+
+
+Merge!
+
+/github.com/Berkeley-CS61B-Student/sp21-93
+
+
+We have two people (computers) cloning this same repo.
+
+1. p1/sp21-p93 
+
+2. p2/sp21-p93
+
+P1: clone the repo
+P2: clone the repo
+P1: works on Collatz.java and commits the file
+P1: pushes everything to origin/master
+P2: changes something on Collatz.java and makes a commit.
+P2: pushes it to origin/master -> rejected! (Updates were rejected because the remote contains work that you do not have locally.)
+
+* no way that both communicate each other
+
+* one fix is to pull and update everything from what is in local (master) from the origin! 
+ -> git pull origin master
+ -> since new commit was made (what we pulled from the origin), a message box will pop up!
+ -> git will place all the commits including what we just pulled from origin and the current commits in a chronological order. 
+ -> skeleton -> p1 -> p2 -> merged commit
+ -> really "merge" the two files p1 made and p2 made into merged commit.
+
+* what really happened inside:
+P2:
+ 1. p1 pushed something
+ 2. p2 made some changes as well
+ 3. p2 pulls everything from the origin
+ 4. git checks at what point of p2 diverges from the origin.
+ 5. git "fetches" origin/master branch to local master branch of p2.
+ 6. once the master of origin is fetched, git tries to merge p1 and p2's commits and make a new commit that tracks this.
+ 7. When successfully done, git will rearrange every commit in a chronological order.
+ 8. Skeleton -> p1's commit (origin/master) -> p2's commit -> new merging commit
+ 9. When we push everything to origin, the origin/master will advance to new merging commit.
+
+P1:
+ 1. After the first merge occurs with p2, when we pull everything, we are just a few commits behind from the origin/master
+ 2. We go "fast-forward" to the origin/master.
+
+Everything is in synced! 
+
+
+
+
+Merge Conflict!
+
+P2: finished lab01.
+P2: committed it and pushed it to origin master
+P1: also finished lab01.
+P1: tries to commit and push.
+P1: failed, so tried to pull and merge
+P1: this time, git could not merge it properly.
+P1: opens up the file git could not merge and it says:
+<<<<<<<< HEAD
+	return 2 * n + 1;
+========
+	return 3 * n + 1;
+>>>>>>>> 64fd480sdf95020aaadd203cd02
+Means that what p1 has (HEAD) is "return 3 * n + 1", which is different from what p1 is trying to fetch
+From 64fd480sdf95020aaadd203cd02, which says, "return 3 * n + 1;" at the same location.\
+
+To fix that, we delete  <<<<<<<<HEAD to ===========. Then, we make a new commit.
+
+
+p1: tries to pull
+p1: git tries to merge but fails.
+p1: fix the file and make a new commit.
+p1: git successfully merges!
+
+
+
+Pull from a different repo and submit to a different repo!
+
+
+As a student, std, we pull from skeleton, and push to grade repo! 
+But, sometimes staff will add a new assignment as we go along.
+
+
+STD: pull from skeleton and get the pointer, "skeleton/master" -> commit 0
+STD: do some work and push the work to Grade Repo and get the pointer, "origin/master". Let's say -> commit 2
+Staff: create a new assignment commit 3 in skeleton. 
+STD: pull the commit 3 from skeleton. (Since merge will always be successful)
+Commit 2-> origin/master
+Commit 3-> skeleton/master
+Commit 4-> new commit made after merge (fetch commit3  and merge -> merge 4)-> master
+
+
+Suppose I messed up proj0 and want to restart.
+
+I will just delete everything in proj0 -> rm -rf proj0
+
+git pull skeleton master -> it says everything is updated.
+
+What happed? -> git will look at skeleton/master pointer which is commit3
+Then git will investigate the skeleton repo and look at commit 3. Everything is up-to-date.
+
+We can look for the commit that has the skeleton file of proj0. 
+Then we can grab proj0. 
+We found the commit ID (commit whatever).
+1. We commit the fact that we delete all the files in proj0
+2. checkout commit whatever
+3. cat proj0 to check.
+4. Come back to master (checkout master)
+5. Git checkout commit whatever -- proj0
+ 
+
+
+a8e51b433c3884d1a0b5b93bded6f4c2ce5b8e05
+
+
+
+
+ 
+
+
+
+
