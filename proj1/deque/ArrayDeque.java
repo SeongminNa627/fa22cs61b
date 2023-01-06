@@ -1,8 +1,10 @@
 package deque;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.System.*;
 
 import static java.lang.System.arraycopy;
+import static java.lang.System.setOut;
 
 /**
  * @Author Seongmin Na
@@ -19,23 +21,31 @@ import static java.lang.System.arraycopy;
  * For arrays under length 16, your usage factor can be arbitrarily low.
  */
 
-public class ArrayDeque<T> implements Iterable<T>{
+public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
     /** Invariants:
      * size == number of items + 1
      */
 
     private class ArrayDequeIterator<T> implements Iterator<T>{
-        private ArrayDeque L;
+        private ArrayDeque ad;
+        private int front;
+        private int curr;
+        private int length;
         public ArrayDequeIterator(ArrayDeque<T> ADeque){
-            L = ADeque;
+            ad = ADeque;
+            front = ad.first;
+            length = ad.capacity;
+            curr = 0;
         }
         @Override
         public T next(){
-            return null;
+            T item = (T) ad.get(curr);
+            curr ++;
+            return item;
         }
         @Override
         public boolean hasNext(){
-            return true;
+            return ad.get(curr+1) != null;
         }
     }
     private T[] items;
@@ -55,32 +65,38 @@ public class ArrayDeque<T> implements Iterable<T>{
         last = 1;
         usageFactor = (float) size / capacity;
     }
-
-
+    public ArrayDeque(int cap){
+        items = (T[]) new Object[cap];
+        capacity = cap;
+        size = 0;
+        first = 0;
+        last = 1;
+        usageFactor = (float) size / capacity;
+    }
+    private void resize(int n){
+        T[] newItems = (T[]) new Object[n];
+        int pos = 0;
+        for (int i = (capacity + first + 1) % capacity ; pos < size; i =  (capacity +  i + 1) % capacity){
+            newItems[pos] = items[i];
+            pos ++;
+        }
+        items = newItems;
+        capacity = n;
+        first = capacity - 1;
+        last = size;
+        usageFactor = (float) size / capacity;
+    }
+    @Override
     public void addFirst(T item){
-        /**
-         * Java.lang.System.arraycopy(src,dest,srcPos, destPos, length)
-         * pre      = {null, null, null, null, null, null, null, null}
-         *              0     1     2     3     4     5     6     7
-         *            first  last
-         * existing = {a, null ,null, f  ,e ,d ,c ,b}
-         *             0   1     2    3   4  5  6  7
-         *                last first
-         * size = 6
-         * capacity = 8
-         * first = 2 (f)
-         * last = 1 (a)
-         * usageFator = 6/8;
-         * resize()?
-         */
         if (size + 1 >= capacity){
             resize((int) (capacity * 1.5));
         }
         items[first] = item;
         first = (capacity + first - 1) % capacity;
         size ++;
-        usageFactor = (float) (size + 1)/capacity;
+        usageFactor = (float) size/capacity;
     }
+    @Override
     public void addLast(T item){
         if (size + 1 >= capacity){
             resize((int) (capacity * 1.5));
@@ -88,55 +104,79 @@ public class ArrayDeque<T> implements Iterable<T>{
         items[last] = item;
         last = (capacity + last + 1) % capacity;
         size ++;
-        usageFactor = (float) (size + 1)/capacity;
+        usageFactor = (float) size/capacity;
     }
-    private void resize(int n){
-         //1. resize properly.
-         //      - decrease the capacity (delete)
-         //      - increase the capacity (add)
-         T[] newItems = (T[]) new Object[n];
-         //      - copy everything over from the older array.
-         int pos = 0;
-         for (int i = (capacity + first + 1) % capacity ; pos < size; i =  (capacity +  i + 1) % capacity){
-             newItems[pos] = items[i];
-             pos ++;
-         }
-         items = newItems;
-         // 2. relocate the two pointers: first, last.
-         capacity = n;
-         first = capacity - 1;
-         last = size;
-
-         // 3. adjust the usageFactor
-         usageFactor = size / capacity;
-
-
+    @Override
+    public int size(){return size;}
+    @Override
+    public T removeFirst(){
+        if (size == 0){
+            return null;
+        }
+        float nextUsage = ((float) (size - 1))/ capacity;
+        if (size > 16 && nextUsage < USAGE_FACTOR_CUT){
+            resize((int) (capacity * 0.5));
+        } else if ( 1 < size && size < 16 && nextUsage < 0.13){
+            resize((int) (capacity * 0.7));
+        }
+        T item = items[(first + 1 + capacity) % capacity];
+        items[(first + 1 + capacity) % capacity] = null;
+        first = (first + 1 + capacity) % capacity;
+        size --;
+        usageFactor = (float) size / capacity;
+        return item;
     }
-    public boolean isEmpty(){
-        return size == 0;
+    @Override
+    public T removeLast(){
+        if (size == 0){
+            return null;
+        }
+        float nextUsage = (float) (size - 1)/ capacity;
+        if (size > 16 && nextUsage < USAGE_FACTOR_CUT){
+            resize((int) (capacity * 0.5));
+        } else if ( 1 < size && size < 16 && nextUsage < 0.13){
+            resize((int) (capacity * 0.7));
+        }
+        T item = items[(last - 1 + capacity) % capacity];
+        items[(last - 1 + capacity) % capacity] = null;
+        last = (last - 1 + capacity) % capacity;
+        size --;
+        usageFactor = (float) size / capacity;
+        return item;
     }
-    public int size(){
-        return size;
+    @Override
+    public T get(int index){
+        return items[(first + index + 1 + capacity) % capacity];
     }
+    @Override
     public void printDeque(){
         System.out.println(this);
     }
-    public T removeFirst(){
-        return null;
-    }
-    public T removeLast(){
-        return null;
-    }
-    public T get(int index){
-        return null;
-    }
     @Override
     public boolean equals(Object o){
-        return true;
+        if (o instanceof ArrayDeque ad){
+            if (ad.size() != this.size()){
+                return false;
+            }
+            for (int i = 0; i < this.size(); i ++){
+                if (!ad.get(i).equals(this.get(i))){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
     @Override
     public String toString(){
-        return null;
+        StringBuilder sb = new StringBuilder("{");
+        for (T item: this){
+            sb.append(item);
+            sb.append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append("}");
+        return sb.toString();
     }
     @Override
     public Iterator<T> iterator(){
@@ -144,8 +184,10 @@ public class ArrayDeque<T> implements Iterable<T>{
     }
     public static void main(String[] args){
         ArrayDeque<Integer> test = new ArrayDeque<>();
-        for (int i = 0; i < 25; i ++){
+        for (int i = 0; i < 25; i ++) {
             test.addFirst(i);
+            test.addLast((int)(i * 1.2));
         }
+        System.out.println(test.get(0));
     }
 }
