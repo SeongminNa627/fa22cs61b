@@ -1,5 +1,7 @@
 package deque;
 import static org.junit.Assert.*;
+
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 import java.util.*;
 
@@ -15,9 +17,9 @@ public class ArrayDequeTest{
         Integer val3 = rand.nextInt(100);
         test.addFirst(val3);
 
-        assertEquals("Removing last item - should get " + val3, val3, (Integer) test.removeLast());
-        assertEquals("Removing last item - should get " + val2, val2, (Integer) test.removeLast());
         assertEquals("Removing last item - should get " + val1, val1, (Integer) test.removeLast());
+        assertEquals("Removing last item - should get " + val2, val2, (Integer) test.removeLast());
+        assertEquals("Removing last item - should get " + val3, val3, (Integer) test.removeLast());
 
         assertEquals(0, test.size());
     }
@@ -100,6 +102,71 @@ public class ArrayDequeTest{
         assertEquals("Should return null when removeLast is called on an empty Deque,", null, ad1.removeLast());
 
 
+    }
+    @Test
+    public void randomizedIntegerTest() {
+        /* Testing Methods:
+            0. addFirst
+            1. addLast
+            2. size
+            3. isEmpty
+            4. get
+            5. getRecursive
+            6. equals()
+            7. removeFirst --> Can't be called when size == 0
+            8. removeLast --> Can't be called when size == 0
+         */
+        int testSize = 100000;
+        ArrayDeque<Integer> lst1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lst2 = new ArrayDeque<Integer>();
+
+        for (int i = 0; i < testSize; i++) {
+            int opNum = StdRandom.uniform(8);
+            int val = StdRandom.uniform(testSize);
+            if (lst1.size() < 0) {
+                opNum = StdRandom.uniform(6);
+            }
+            //addFirst() test
+            if (opNum == 0) {
+                lst1.addFirst(val);
+                lst2.addFirst(val);
+            }
+            //addLast() test
+            else if (opNum == 1) {
+                lst1.addLast(val);
+                lst2.addLast(val);
+            }
+            //size() test
+            else if (opNum == 2) {
+                assertEquals(lst1.size(), lst2.size());
+            }
+            //isEmpty() test
+            else if (opNum == 3) {
+                assertEquals(lst1.isEmpty(), lst2.isEmpty());
+            }
+            //get() test
+            else if (opNum == 4) {
+                assertEquals(lst1.size(), lst2.size());
+                int index = StdRandom.uniform(lst1.size() + 1);
+                assertEquals(lst1.get(index), lst2.get(index));
+            }
+            //equals()
+            else if (opNum == 5) {
+                assertEquals(lst1,lst2);
+            }
+            //removeFirst()
+            else if (opNum == 6) {
+                assertEquals(lst1.removeFirst(), lst2.removeFirst());
+                assertEquals(lst1.size(), lst2.size());
+            }
+            //removeLast()
+            else {
+                assertEquals(lst1.removeLast(), lst2.removeLast());
+                assertEquals(lst1.size(), lst2.size());
+            }
+
+
+        }
     }
 
 }
