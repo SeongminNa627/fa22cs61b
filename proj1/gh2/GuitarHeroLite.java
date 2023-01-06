@@ -8,6 +8,7 @@ import edu.princeton.cs.algs4.StdDraw;
 public class GuitarHeroLite {
     private static final double CONCERT_A = 440.0;
     private static final double CONCERT_C = CONCERT_A * Math.pow(2, 3.0 / 12.0);
+    String keyboard="q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
 
     public static void main(String[] args) {
         /* create two guitar strings, for concert A and C */
