@@ -1,5 +1,4 @@
 package deque;
-
 import java.util.*;
 /**
  * @author Seongmin Na
@@ -17,7 +16,7 @@ import java.util.*;
  * For example, if you add 10,000 items to the deque, and then remove 9,999 items, the resulting memory usage should amount to a deque with 1 item, and not 10,000.
  * Remember that the Java garbage collector will "delete" things for us if and only if there are no pointers to that object.
  */
-public class LinkedListDeque<T> implements Iterable<T> {
+public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     private class Node{
         public Node prev;
         public T item;
@@ -29,6 +28,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
             next = n;
         }
     }
+
     private class LLDequeIterator<T> implements Iterator<T>{
         private LinkedListDeque lst;
         private Node curr;
@@ -59,10 +59,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
     private Node sentinel;
     private int size;
 
-
-
-
-
+    @Override
     public void addFirst(T item){
         Node newNode = new Node(null, item, null);
         newNode.prev = sentinel;
@@ -71,6 +68,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         sentinel.next = newNode;
         size = size + 1;
     }
+    @Override
     public void addLast(T item){
         Node newNode = new Node(null, item, null);
         Node last = sentinel.prev;
@@ -81,12 +79,11 @@ public class LinkedListDeque<T> implements Iterable<T> {
         size = size + 1;
 
     }
-    public boolean isEmpty(){
-        return size == 0;
-    }
+    @Override
     public int size(){
         return size;
     }
+    @Override
     public T removeFirst() {
         if (size < 1){
             return null;
@@ -99,6 +96,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         size = size - 1;
         return item;
     }
+    @Override
     public T removeLast(){
         if (size < 1){
             return null;
@@ -112,6 +110,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         size = size - 1;
         return item;
     }
+    @Override
     public T get(int index){
         if (index >= size || index < 0){
             return null;
@@ -125,12 +124,13 @@ public class LinkedListDeque<T> implements Iterable<T> {
         }
         return item;
     }
+    @Override
     public void printDeque(){
         System.out.println(this);
     }
     @Override
     public boolean equals(Object o){
-        if (o instanceof LinkedListDeque cmpL) {
+        if (o instanceof LinkedListDeque cmpL){
             LinkedListDeque thisL = this;
             Node thisNode = this.sentinel.next;
             Node  cmpNode = cmpL.sentinel.next;
