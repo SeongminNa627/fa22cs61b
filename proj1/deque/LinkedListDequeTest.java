@@ -60,7 +60,7 @@ public class LinkedListDequeTest {
     public void removeEmptyTest() {
 
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
         lld1.addFirst(3);
 
         lld1.removeLast();
@@ -217,8 +217,8 @@ public class LinkedListDequeTest {
             8. removeLast --> Can't be called when size == 0
          */
         int testSize = 100000;
-        LinkedListDeque<String> lst1 = new LinkedListDeque<>();
-        LinkedListDeque<String> lst2 = new LinkedListDeque<>();
+        LinkedListDeque<String> lst1 = new LinkedListDeque<String>();
+        LinkedListDeque<String> lst2 = new LinkedListDeque<String>();
 
         for (int i = 0; i < testSize; i++) {
             int opNum = StdRandom.uniform(9);
