@@ -1,5 +1,5 @@
 package hashmap;
-
+import java.util.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class TestMyHashMapExtra {
         assertTrue(q.containsKey("e"));
     }
 
-    /** 
+    /**
      * Remove Test 2
      * Test the 3 different cases of remove
      */
