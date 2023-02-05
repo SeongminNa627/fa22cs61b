@@ -1,0 +1,177 @@
+Beyond Trees
+
+Tree as a data structure? -> In fact, tree is more than that! more generic.
+	- Organization chart
+	- Family lineages
+	- MOH Trainning Manual for Management of Malaria
+- We want to do some operation on a tree (size of folders or other things)
+	- Level order
+		- visit top-to-bottom, left-to-right
+	- Depth First Traversals
+		- Preorder, Inorder, Postorder
+
+
+		-Preorder(BSTNode x) -> trace a path around the graph from the top going counter-clowise every time we pass the LEFT of a node.
+
+			if (x == null) return;
+			print(x.key)
+			preorder(x.left)
+			preorder(x.right)
+		-Inorder(BSTNode x) -> visit when you cross the bottom of a node
+			if (x==null) return;
+			inorder(x.key)
+			print(x.key)
+			inorder(x.key)
+		-Postorder(BSTNode x) -> visit when you cross the right of a node
+			if (x==null) return; 
+			postorder(x.key)
+			postorder(x.key)
+			print(x.key)
+
+		- Postorder Traversal for gathering file sizes
+			postOrder(BSTNode x){
+				if (x ==null) return 0;
+				int total = 0;
+				for (BSTNode c : x.children())
+					total += postOrder(c)
+				total += x.fileSize();
+				return total;
+			}
+
+
+Graphs
+	- Trees are great to represent hierarchical structure. However, not everything is like that!
+		- ex) Paris Metro Map
+		- A Tree is:
+			- A set of nodes
+			- A set of edges that connect those nodes.
+				- Contraint: There is exactly one path between any two nodes.
+		- A Graph is:
+			- A set of nodes
+			- A set of zero or more edges, each of which connects two nodes.
+			_ A Simple Graph
+				 - No edges that connect a vertex to itself, (loops)
+				 - No two edges that connect the same vertices (no parallel edges)
+			- A Directed Graph
+			     - Edges are directed. 
+			- For more terminology, take a look at the textbook.
+Graph Problems
+	1. Shortest Route from a vertex A to B?
+	2. Are there cycles? 
+	3. Is there a tour you can take that only uses each node exactly once?
+	4. Is there a tour that uses each edge exactly once?
+
+	- s-t problem: is there a path between vertices s and t?
+	- connectivity: is the graph connected, i.e.  is there a path between all vertices?
+	- biconnectivity. is there a vertex whose removal disconnects the graph?
+	- shrotest s-t path. what is the shrotest path between vertices s and t
+	- cycle detection
+	- eulert tour: is there a cycle that uses every edge exactly once?
+	- hamilton tour. is there a cycle that uses every vertex exactly once?
+	- planarity. can you draw the grpah on paper with no crossing edges?
+	- isomorphism are two graphs isomorphic?
+
+	- Euler tour: is there a cycle that uses every edge exactly once?
+	- Hamilton tour: is there a cycle that usese every vertex exactly once?
+		- Difficulty can be deceiving.
+
+Depth-First Traversal
+	- s-t connectivity
+	- is there a path between s and t?
+		- algorithm: 
+			- Does s == t? if so, return true.
+			- Otherwise, if connected(v,t) for any neighbor v of s, return true.
+			- return false
+			- > this approach can cause an infinite loop for not differentiating ones that were visited and ones that need to be visited.
+
+			- mark s
+			- Does s == t? if so, return true.
+			- Otherwise, if connected(v,t) for unmarked any neighbor v of s, return true.
+			- return false
+		- This above algorithm is called Depth First Traversal
+			- expore a neighbor's entire subgraph first before even moving on to the next neighbor is known as DFT
+	- The power of DFT
+		- Find a path from s to every other reachable vertex, visiting each vertex at most once.
+		- dfs(v)
+			- Mark v.
+			- For each unmarked adjacent vertex w:
+			- set edgeTo[w] = v. (how do you get to w?) - keep the record of the path from v to each vertex!
+			- dfs(w)
+Tree vs. Graph Traversals
+
+There are many tree traversals: preorder, inorder, postorder, level order...
+	DFS is also called DFS Preorder: we act before DFS calls to neighbors.
+		- our action was setting edgeTo
+		- edgeTo[1] wsa set before dfs calls to neighbor 2 and 4.
+	DFS postorder?
+		- dfs(s):
+			- mark(s)
+			- for each unmarked neighbor n of s, dfs(n)
+			- print(s)
+	BFS order: act in order of distance from s.
+		- visit in the order of how far they are from the root. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
