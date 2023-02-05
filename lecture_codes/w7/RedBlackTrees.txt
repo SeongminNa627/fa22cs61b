@@ -1,0 +1,124 @@
+Red Black Trees!
+1. The Bad News for B-trees
+	- pain in the ass to implement.
+		- having to keep track of 2-nodes/3-nodes
+		- walking up the tree to split nodes
+2. New Way of Balancing Trees.
+	- BST structures
+		- 1
+			\
+			  2
+			    \
+			     3
+		- 1
+			\
+			  3
+			 /
+			2
+		- 2
+		 / \
+		1   3
+	- rotation process will preserve the BST property, and we can move through the states of a tree.
+	- see the demo from the slide for rotation
+		- rotateLeft(G): let x be the right child of G. Make G the new left child of X.
+			- No change to the semantics of tree.
+			- Temporary merging idea is useful!
+
+		- rotateRight(P)
+
+BSTs
+	- We can manipulate a tree to make it bushy to make it optimal.
+		- We can shorten the tree while keeping the propery of BST.
+	- Within O(N) rotation operations, we can make it!
+		- One caveat, there is no way to figure out what they are.
+Red-Black Trees
+	- Binary Search Trees: can balance using rotation, but we have no algorithm for doing so
+	- 2-3 trees: Balanced by construction
+	- Let's create one stucturally identical to 2-3 tree.
+		-  Try representing it as a BST!
+			- What about 3-nodes?
+				- We can split the node with 2 elements and have a "red glue node" picks up the two elements and everything. 
+				- However, in this way, 
+					1. code will be ugly.
+					2. we create a waste
+				- Instead, One of the elements to be a new parent and that glue node becomes a glue "link" to represent the co-parent relationship!
+				- Glue-link toward the left -> Left-Leaning RB BST
+					- LLRBs are normal BSTs
+					- There is one-one correspondence between LLRB and an equivalent 2-3 tree.
+					- The red is just a convenient fiction. Red links don't do anything special.
+		- Performance of LLRB
+			- searching is easy. Just like BST.
+			- Do the valid LLRB tree problem.
+				- Use the invariants to verify - equidistance.
+			- Every red link will increase the height by 1
+				- black link + red links = height.
+				- Supposewe have a 2-3 tree of height H
+					- max Height? in terms of H?
+						- Worst case, every black links nodes are connected, the nodes are full -> potentially red links. Therefore, H + 1 will increase. 
+			- Properties
+				1. No node has two red links[otherwise it would like 4 node, which is not 2-3 trees]
+				2. Every path from root to a leaf has same number of black links [because 2-3 trees have the same number of links to every leaf]
+					- Also, every one side of their children can be red, full, 2 node. Which increases the overall height by 1.
+					- The tree height will expand by 2H and the last node will increase it by 1, total 2H+1
+					- No node can be touched by 2 red links.
+			- Where do LLRBs come from?
+				- would not make sense to build a 2-3 tree, convert 
+				- instead, we build a usual BST.
+					- Use zero or more rotations to maintain the 1-1 mapping from 2-3 tree to LLRB.
+The 1 - 1 Mapping
+	- 2-3 Tree : LLRB
+		1. We always use red link to add an item.
+			- black link will be for having them below.
+		2. Cannot any red link leaning to the right
+			- we rotate after adding an item when it goes to the right.
+		3. Adding consecutive two small ones?
+			- rotate it so that we get temperary 4 node
+				- Spliting the 4node?
+					- Make the red links black
+					- Make the parent red
+				- This does not change any structure but to keep the mapping property.
+
+	- If there is a right leaning 3-node, we have a Left Leaning Violation
+		- Rotate left the appropriate node to fix
+	- If there are two consecutive left links, we have an incorrect 4 node violation
+		- Rotate right the appropriate node to fix
+	- If there are any nodes with two red children, we have a Temporary 4 Node. 
+		- Color flip the node to emulate the split operation.
+
+	- When flip() (color change) causes the left leaning violation
+		- rotate the parent!
+
+	- Try 7,6,5,4,3,2,1 on LLRB
+		1. Right red link - rotate left
+		2. Two consecutive left - rotate right.
+		3. Red left and red right - color flip.
+		Try 1 through 7.
+Runtime 
+	- LLRB will has height O(logN)
+		- Structurally indentical to 2-3 tree
+	- Contains is O(logN)
+	- Insert is O(log N)
+		- O(log N) to add the new node
+		- O(log N) rotation and color flip operations per insert
+	- Check out the implementation
+		- Java's TreeMap uses RedBlackTree
+			- 2 - 3 - 4 siginficantly faster, complex implementation. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

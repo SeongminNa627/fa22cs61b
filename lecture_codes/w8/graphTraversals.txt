@@ -1,0 +1,158 @@
+Breadth First Search
+initialize a queue with a starting vertex s and mark that vertex.
+	- A queue is a list that has two operations: enqueue (a.k.a. addLast) and dequeue (a.k.a. removeFirst).
+	- Let’s call this the queue our fringe.
+Repeat until queue is empty:
+	- Remove vertex v from the front of the queue.
+	- For each unmarked neighbor n of v: 
+		Mark n.
+		Set edgeTo[n] = v (and/or distTo[n] = distTo[v] + 1).
+		Add n to end of queue.
+	- Queue ensures the cloest ones apear first.
+BFS cannot be used for real map
+
+
+Graph API - Implementation
+ - Application Programming INterface
+ - An underluing data structure to represent our graphs
+ - Our choices can have profound implications on:
+ 	- Runtime
+ 	- Memory Usage
+ 	- Difficulty of implementation
+
+ #1. Integer Vertices
+ 	- Then we need Map<String, integer>:
+ 		Austin: 0
+ 		Dallas: 1
+ 		Houston: 2
+ #One from optional textbook
+ public class Graph{
+ 	public Graph(int v):
+ 	public void addEdge(int v, int w):
+ 	Iterable<Integer> adj(int v):
+ 	int V():
+ 	int E():
+ }
+ 	- Number of vertices must be specified in advance
+ 	- Does not support weights on nodes or edges
+ 	- has no method for getting the number of edges for a vertex. (degree)
+As a client of this API, I need to implement degree(Graph G, int v)
+Also for example of print
+public static void print(Graph G){
+	for (int v =0; v< g.V(); v++){
+		for (int w: G.adj(v)){
+			System.out.println(v + "-" +w); 
+		}
+	}
+}
+Our choice of API is extremely important.
+
+Graph Represenation and Graph Algorithm Runtime
+-> 1. Adjacency Matrix
+	- if undidrected, each edge is represented twice in the matrix. Simplicity at the expense of space. 
+	-> G.adj(2) will return next() returns 1 next() returns 3
+	-> total runtime to iterate over all neighbors of v is 𝜭(v).
+
+	-> What is the order of growth of the running time of the print client from before if the graph uses an adjacency matrix representation?
+		-> 𝜭(V^2)
+-> 2. Edge Sets: Collection of all edges. 
+	- HashSet<Edge>
+-> 3. Adjacency lists
+	- Maintain array of list indexed by vertex number like a hashtable
+	- most popular approach for representing graphs
+		- often times, graphs are sparse! 
+	- print runtime -> 𝜭(V + E)
+		runtime to iterate over v's neighbor? -> Ω(1), O(V)
+		Best: 𝜭(V) Worst: 𝜭(V^2)
+		- Create V iterators.
+		- Print E times.
+Summary of the operations runtime on the slide
+In practice, adjacency lists are common.
+
+
+
+Depth first search implementation
+Common design patter in graph algorithms: Decouple type from processing algorithm
+
+	- Create a graph object.
+	- Pass the graph to a graph-processing method in a client
+		- Class like Paths manutiah
+	- Query the clinet class for information
+		- Ask th Paths class for information
+DepthFirstPaths  Demo
+public class DepthFirstPaths {
+  private boolean[] marked; <==========marked[v] is true iff v connected to s
+  private int[] edgeTo; <==========edgeTo[v] is previous vertex on path from s to v
+  private int s;
+  ...
+  public DepthFirstPaths(Graph G, int s){
+  	...
+  	dfs(G,s);
+  }
+  public Iterable<Integer> pathTo(int v) {
+    if (!hasPathTo(v)) return null;
+    List<Integer> path = new ArrayList<>();
+    for (int x = v; x != s; x = edgeTo[x]) {
+      path.add(x);
+    }
+    path.add(s);
+    Collections.reverse(path);
+    return path;
+  }
+
+  public boolean hasPathTo(int v) {
+    return marked[v];
+  }
+  private void dfs(Graph G, int v){
+  	marked[v] = true;
+  	for (int w: G.adj(v)){
+  		if (!marked[v]) -> edge considerations, each constant time
+  			edgeTo[w] = v;
+  			dfs(G, w);
+  	}
+  }
+}-> runtime of constructor? -> O(V + E) -> Time
+	Each vertex is visited at most once 
+	Each edge considered at most twice O(E) 
+	Can only visit a vertex if there is an edge to it.
+		so why not just say O(E)?
+		Constructor has to create an all false marked array
+		This marking behavior takes 𝜭(V) -> Space
+		Can't either say 𝜭(V + E) -> Graph with no edges touching source
+
+BFS VS DFS with adjacency list - efficiency table -> They are very similar but different in the order they visit each node
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

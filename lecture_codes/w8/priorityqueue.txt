@@ -1,0 +1,146 @@
+The priority queue interface
+
+
+
+/** (Min) Priority Queue: Allowing tracking and removal of 
+  * the smallest item in a priority queue. */
+
+public interface MinPQ<Item> {
+    /** Adds the item to the priority queue. */
+
+    public void add(Item x);
+    /** Returns the smallest item in the priority queue. */
+
+    public Item getSmallest();
+    /** Removes the smallest item from the priority queue. */
+
+    public Item removeSmallest();
+    /** Returns the size of the priority queue. */
+
+    public int size();
+}
+
+Suppose your job is to monitor the text messages of the citizens to make sure that they are not having any unharmonious conversations.
+
+Naive implementation of store and sort!
+public List<String> unharmoniousTexts(Sniffer sniffer, int M) {
+    ArrayList<String>allMessages = new ArrayList<String>();
+    for (Timer timer = new Timer(); timer.hours() < 24; ) {
+        allMessages.add(sniffer.getNextMessage());
+    }
+
+    Comparator<String> cmptr = new HarmoniousnessComparator();
+    Collections.sort(allMessages, cmptr, Collections.reverseOrder());
+
+    return allMessages.sublist(0, M);
+𝜭(N)!
+
+
+
+Using MinPQ? -> Track the M Best
+As soon as something comes in, we put it in the MinPQ, and remove the minimum maintaining M items.
+By the end, the sock is just full of M largest items.
+
+
+
+Implementation?
+
+			OrderedArray	BushyBST	HashTable	Heap
+add 			𝜭(N)		𝜭(logN)		𝜭(1)
+getSmallest 	𝜭(1)		𝜭(logN)		𝜭(N)
+removeSmallest	𝜭(N)		𝜭(logN)		𝜭(N)
+caveats						Dups?
+
+explanation for this table!
+
+
+	- Heap
+	- BSTs would work, but it needs to be bushy and dups are awkward
+		- Binary Min Heap -> Binary Tree that is COMPLETE and obeys Min-Heap property
+			- min-heap: every node is less than or equal to both of its children
+			- complete: missing items only at the bottom level (never parent!), all ndes are as far left as possible (needs to be compact and tilted towards left)
+
+			-> "bushiness"
+
+		- getSmallest? return the root!
+		- insert? 
+			- complete tree, min-heap property. 
+				- add to end of heap temporarily.
+				- swim up the hierarchy to your rightful place...
+		- del?
+			- grab the last one and replace with the one we want to delete
+			- swim down! 
+Tree Representation
+	- How do we represent a tree in Java?
+		1. 
+		public class Tree1A<Key>{
+			Key k; 
+			Tree1A left;
+			Tree1A middle; 
+			Tree1A right;
+		}
+
+		2. 
+		public class Tree1B<Key>{
+			Key k;
+			Tree1B[] children;
+		}
+
+		3. 
+		public class Tree1C<Key>{
+			Key k;
+			Tree 1C favoredChild;
+			Tree 1C sibling;
+		}
+
+
+		4. Do not have to store any references.
+		public class Tree2<Key>{
+			Key[] keys;
+			int[] parents -> this will be boring because min-heap is always complete. Therefore it would look like
+			000112233445566....
+		}
+
+		See the slide! 
+		-> we do not really need parents[]. we will keep the keys instead.
+
+		In a swim(int k) method, we will need parent(k).
+		public class Tree3<Key>{
+			public static parent(int k){
+				return (k-1)/2; if leave 0 empty, we get k/2;
+			}
+			leftchild(k) = k*2
+			rightchild(k) = k*2 + 1
+		}
+
+
+			OrderedArray	BushyBST	HashTable	Heap
+add 			𝜭(N)		𝜭(logN)		𝜭(1)		𝜭(logN)
+getSmallest 	𝜭(1)		𝜭(logN)		𝜭(N)		𝜭(1)
+removeSmallest	𝜭(N)		𝜭(logN)		𝜭(N)		𝜭(logN)	
+caveats						Dups?
+
+Priority? -> smallest gets the priority.
+heap is log n time amortized (some resizes, but no big deal)
+Bst can have constant getsmallest if you keep a pointer to smallest
+Heaps handle duplicate priorities much more naturally than bsts
+Array based heaps take less memory
+
+Not really versatile, but effective
+
+
+
+
+
+
+
+
+
+The Search Problem (All data structure!)
+Given a stream of data, retrieve information of interest. -> look at the road map created in the website. 
+				Storage Ops			Primary Retrieval Ops	Retrieve By
+List 			add, insert			get 					index 
+Map
+Set
+PQ
+Disjoint Sets

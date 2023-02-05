@@ -1,0 +1,110 @@
+Tree Heights
+1. BST Tree Heights
+	- Height of a BST:
+		- Worst: Spindly = 0(N - 1);
+		- Best: Bushy = 0(log(N));
+	- Bushy performs way better!
+	- True || False:
+		- A. Worst case BST height is 0(N);
+		- B. BST height is O(N);
+		- C. BST height is O(N^2);
+		= They are all true! 
+		= A is the most informative.
+	- Some truths:
+		1. BST height is O(N);
+		2. Worst case BST height is 0(N);
+		3. Best case BST height is 0(logN);
+		4. O(N^2)
+	- Still O is a usefull idea:
+		- Allows us to make simple blanket statements: binary search is O(logN)
+		- Sometimes don't know the exact runtime, so use O to give an upper bound.
+		- Easier to write proofs for Big O than big theta.
+		
+
+BST Performance!
+	1. Heigth VS Depth
+		- The depth of a node is how far it is from the root, e.g. depth(g) =2.
+		- The height of a tree is the depth of its deeppest leaf.
+			- ex) Worst case is contains, requires 5 comparison (height + 1), see the pic!
+		- The average depth of a tree is the average depth of a tree's nodes.
+			- ex) Average case is 3.35 comparisons (average + 1).
+	2. What causes spindly vs bushy
+		1. spindly - 0(N)
+			- add elements in order.
+		2. bushy - 0(log N)
+			- add the medians first!
+		- Good Thing is that randomly created BST will be bushy
+			- Expected Average Depth; is almost log(N)
+			- Random inserts will result 0(log(N))!
+		- However Add + Del? 
+			- Addition + Deletion is also 0(log(N))!
+		- However, we cannot always insert things in a random manner!
+			- ex) when data accumulates -> like record of times!!!
+
+B-Trees / 2-3 Trees/ 2-3-4 Trees!
+- To avoid this sequential insertion,
+	- What if we stick things to the existing leaf not to have anything more below the original bottom?
+		- You are degenerating to linked list...
+			- Set a limit!
+				- Any node has more than L items, give na item to parent.
+				- Then it would break the contraint of right being bigger than parent. 
+				- Split the problematic to be alone, right between & below of the 2 parents! 
+				- 15 17
+				14  16 18 19
+				- 15 17
+				14  16  18-19-20-21
+				-> 15-17-19
+				14  16  18 20-21
+
+				-> Let us suppose the root getting too full.
+					-> ascending one will be one and only root! 
+				- Now the performance is perfectly optimized and the tree is perfectly balanced!
+				- This B-tree with L = 3 is 2-3-4 tree or a 2-4 tree. 
+					- refers to the number of children that a node can have.
+					- L = 2 is called 2-3 tree.
+
+				- When L is large, we use it for databases.
+				- When split happens, all subtree go one level down!
+
+Runtime of B-trees
+- Its Ivariants?
+	- exercise 1
+		- add number 1,2,3,4,5,6,7 to a regular BST
+		- add them to a 2-3 tree (Height 2)
+	- exercise 2
+		- Find an order such that if you add the items the resulting tree has height 1.
+		  - 2, 3, 4, 5, 6, 1, 7 (Height 1)
+
+	- It is guaranteed to get a bushy tree.
+	- All leaves muust be the same distance from the source.
+		- No leaf can go down below than others by itself. 
+		- it gets stuck in a bottom most leaf. 
+		- When the leaf gets full, the ascending one will cause every other leaves to go down below!
+	- A non-leaf node with K items must have exactly K+1 children.
+
+
+Runtime!
+	- Worst: 
+		- L: max items for each leaf
+		- When each leaf is not full! (smallest number of items it can hold - 1) -> log_2(N)
+	- Best: 
+		- When each leaf is full (L items!) -> log_L+1(N)
+
+	- Overall height is therefore 0(logN)
+
+- Runtime for contains() & add() more slides for del!
+	- Worst case number of nodes to inspect is H + 1
+	- Worst case number of items to inspect per node: L
+	- Overall- >O(HL)
+	-> H = 0(logN)-> O(LlogN) -> O(logN).
+
+
+
+
+
+
+
+
+
+
+
