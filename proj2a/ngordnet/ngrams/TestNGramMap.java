@@ -38,6 +38,16 @@ public class TestNGramMap {
         for (int i = 0; i < expectedCounts.size(); i += 1) {
             assertEquals(expectedCounts.get(i), request2006to2007.data().get(i), 1E-10);
         }
+
+
+        List<String> requestAndWandered = new ArrayList<>();
+        requestAndWandered.add("request");
+        requestAndWandered.add("wandered");
+        double total2006 = 27695491774.0;
+        double totalRequestAndWondered =  677820.0 + 87688.0;
+        double summedFreq = totalRequestAndWondered/total2006;
+        TimeSeries requestPlusWanderedWeight = ngm.summedWeightHistory(requestAndWandered,2005, 2008);
+        assertEquals(summedFreq, requestPlusWanderedWeight.get(2006), 1E-10);
     }
 
     @Test
