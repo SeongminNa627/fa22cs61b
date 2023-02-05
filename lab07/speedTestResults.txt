@@ -1,0 +1,2 @@
+For random insertion, ULLMap that is based on list is much slower, compared to BSTMap which is basically logN, since it is bushy.
+However, in order insertion was very bad for BST because it takes linear time, which is just N.

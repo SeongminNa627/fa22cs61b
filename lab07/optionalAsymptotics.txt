@@ -1,0 +1,26 @@
+1. B.put(K, V) ∈ O(log(N)) -> false
+2. B.put(K, V) ∈ Θ(log(N)) -> false
+3. B.put(K, V) ∈ Θ(N) -> false
+4. B.put(K, V) ∈ O(N) -> true
+5. B.put(K, V) ∈ O(N2) -> true
+
+6. Let g(N) be the average number of comparisons required to complete N random calls to B.put(K, V) followed by B.containsKey(K). Then, g(N) ~ 2(ln(N)).
+ Note: We write g(N)~f(N) to represent that g(N)/f(N) -> 1 as N gets large.
+True. Random call for put and containsKey(K) will be 2lnN becuase the tree is almost bushy.
+
+7. For key C != K, running both B.containsKey(K) and B.containsKey(C) ∈ Ω(log(N)).
+
+8. Let BSTMap b be comprised of a root Node (Key, Value pair) and two BSTMap subtrees called left and right. Further, assume the method numberOfNodes(BSTMap b) returns the number of nodes of a BSTMap rooted in b.root and has a running time of Θ(n), where n is the number of Nodes in the BSTMap rooted in b. What is the running time (in big O notation) of mystery(b, z) for some positive integer z? Give the tightest bound you can assuming b has N nodes. Your answer should not contain any unnecessary multiplicative constants or additive factors.
+
+public Key mystery(BSTMap b, int z) {
+     if (z > numberOfNodes(b) || z <= 0)
+         return null;
+     if (numberOfNodes(b.left) == z-1)
+         return b.root.key;
+     else if (numberOfNodes(b.left) > z)
+         return mystery(b.left, z);
+     else
+         return mystery(b.right, z-numberOfNodes(b.left) - 1);
+ }
+ Best Case: omega(N)
+ Worst Case: theta(NlogN)
