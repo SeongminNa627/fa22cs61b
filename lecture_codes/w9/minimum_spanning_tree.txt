@@ -1,0 +1,83 @@
+Warm-up Problem
+- Given a undirected graph, determine if it contains any cycles
+	1. Use DFS with any starting v, and stop until you encounter a marked one.
+	2. Use a WeightedQuickUnionUF
+		- For each edge, check if the two vertices are connected
+			- if not, union them
+			- if so, there is a cycle
+
+
+Spanning Trees(T)
+	- A subgraph of G, where T 
+		1. is connected
+		2. is a acyclic
+		3. includes all the vertices
+	- minimum spanning tree
+		- sum up all the edges of ST and should be minimum
+	- Is there any good choice of V so we can get shortest paths that is MST?
+		- SPT can be different depending on the choice of V
+		- MST is a global property for a graph as a whole
+			- nonetheless, MST can be SPT for a specific vertex
+
+			-> then! Find a good vertex, run dijkstra's alg -> MST!
+				- Not always is the case -> can't do this
+	- cut property!
+		- cut: an assignment of a graph's nodes to two non-empty sets
+		- crossing edge: is an edge which connects a node from one set to a node from the other
+
+		- given any cut, minimum weight crossing edge is in the MST.
+			- Out of all the crossing edge, the smallest weighted edge is in MST
+			- Suppose that the minimum crossing edge e were not in the MST for some reason.
+				- Adding e to the MST creates a cycle.
+				- Some other edge f must also be a crossing edge
+				- Removing f and adding e is a lower weight spanning tree
+				- contradiction
+		- Algorithm to find MST
+			- Start with no edges in the MST
+				- Find a cut that has no crossing edges in the MST
+				- add smallest crossing edge to the MST
+				- repeat until v-1 edges
+Prim's Algorithm
+
+- Start from some arbitrary start node
+	- Add shortest edge (mark black) that has one node inside the MST under construction. Repeat until V-1 edges. (direct application of cut property)
+- Better Approach
+	- We add EVERY NODE with Weight
+	- starting from some arbitrary start node,
+		- store vertices in order of distance from tree
+		- remove (closest) vertex v from PQ, and relax all edges pointing from v.
+
+
+Prim's vs Dijkstra's 
+- Prim's and Dijkstra's algorithms are exactly the same, except Dijkstra's considers distance from the source and prim's considers distance from the tree
+
+- visit order
+	- dijkstra's algorithm visits vertices in order of distance from the source
+	- prim's algorithm visits vertices in order of distance from the MST under construction
+- relaxation:
+	- relaxation in djkstra's considers an edge better based on distance to source
+	- relaxation in prim's considers an edge better based on distance to tree
+
+-Prim's runtime & Implementation
+	- V insertion
+	- V deletion
+	- Decrease priority O(E) ->every edge gets relaxed. 
+	- total ElogV - > see the slide
+
+Kruskal's Algorithm
+- Sort the edges 
+- Add the smallest edge if it doesn't create any cycle
+- Check the cyclicity with WQU
+- Runtime & Implementation?
+	- ElogE
+	- see the slide
+
+SPT & MST Algorithm Summary
+- 
+	 
+
+
+
+
+
+

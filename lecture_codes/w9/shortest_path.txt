@@ -1,0 +1,87 @@
+BFS vs. DFS for path finding
+1. correctness: both work
+2. output quality: 
+	- BFS: you get paths, and also get the shortest.
+3. time efficiency
+	- similar
+4. space efficiency
+	- DFS worse for spindly call stack gets very deep.
+	- BFS worse for bushy graph (adding items to fringe V times for every node)
+
+
+BFS for Mapping Applciation
+- Need an algorithm that takes into account dedge distances (weights).
+
+
+
+
+Dijkstra's algorithm
+1. Observation: solution will always be a path with no cycles (just don't do it).
+If you were to find the shortest paths from a source vertex to everywhere, you don't need N different arrays.
+Because it would be an extra edge to get to another vertex if you are on a shortest path.
+Solution is a tree!
+
+2. SPT edge: If G is a connected edge -weigthed graphw ith V vertices and E edges, how many edges are in the shortest paths tree of G
+-> V-1: For us to visit any vertex, we need to get there from somewhere, and that somewhere also needs to have an input edge, and so on and so forth, so we need V-1 edges (except for the source). 
+
+3. DFS algorithm - Use better edges if found!
+Our first approach is to use dfs to visit the nodes. We will compare the distance it took to visit each node no matter when the node was visited. So we have to visit unmarked ones as well
+
+Better approach is to just use the closest one first and compare.
+
+	1. Add every vertex into the fringe with infinity as the cost
+	2. visit a vertex
+	3. update the costs, and reorder the fringe (relaxation)
+	  
+
+
+Correctness
+
+Dijkstra's Algorithm Pseudocode
+1. PQ.add(source, 0)
+2. For other vertices v, PQ.add(v, infinity)
+3. While PQ is not empty: 
+	p = PQ.removeSmallest()
+	relax all edges from p
+
+Relaxing an edge p -> q with weight w:
+	if distTo[p] + w < distTo[q]:
+		distTo[q] = distTo[p] + w
+		edgeTo[q] = p
+		PQ.changePriority(q, distTo[q])
+
+
+Key Invariants:
+
+edgeTo[v] is the best known predecessor of v.
+distTo[v] is the best known total distance from source to v.
+PQ contains all unvisited vertices in order of distTo.
+
+Important properties:
+Always visits vertices in order of total distance from source.
+Relaxation always fails on edges to visited (white) vertices. 
+-> as we marching forward, we will not be able to get more obtimized distance by going around because we are choosing to visit the most optimized one first.
+
+
+Runtime:
+1. mostly PQ 
+	- add: V, each costing O(log V) time.
+	- removeSmallest: V, each costing O(logV) time.
+	- changePrioritu: E, each costing O(log V) time.
+
+	Overall, O(VlogV + VlogV + ElogV) ElogV assuming E > V, E = total edges.
+
+
+Single Target Dijkstra's
+Will it find teh shortest path?
+will it be efficient? no.
+	- we want to bias the algorithm to guide it toward the one destination.
+	- we would add some estimate (heuristic) of how far each vertex is from the destination.
+	- The SPT we are left with is not the correct SPT but gives the correct answer for one thing we care about.
+		- 
+
+
+
+
+
+

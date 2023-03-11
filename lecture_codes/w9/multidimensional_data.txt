@@ -1,0 +1,87 @@
+Range-Finding and Nearest
+	- Search Trees (Set)
+		1. BST
+		2. 2-3Tree/ 2-3-4 Tree / B-tree
+		3. RBTree
+		- fast insert, remove, and delete
+		- needs data that are comparable
+	- We want to add a select operation
+		- select(int i ) returns the ith smallest
+		- rank(T x) returns the rank of x in the set
+		- subSet(T from, T to): returns all items between from and to
+		- nearest(T x): returns the value closest to x.
+			- nearest(3) whether that's in the set or not.
+				- search for N and record closest item seen and return it.
+
+		- Tree is great for other purposes like above other than fast adding, deleting!
+Multi-Dimensional Data
+	- Suppose we want to build a binary tree for earth and mars floating on the plane.
+		- we can do one for x, and one for y
+		- put((-1, -1), A)
+		- put((2, 2), B)
+		- put((0, 1), C)
+		- put((1, 0), D)
+		- put((-2, -2), E)
+		- put((-3, 2.5), F)
+		- How can you avoid looking at every node and find all the points left of B 
+			- x coordinate tree -> We can simply work our way down the tree, ignoring pursuing any options that are impossible
+			- Now, we'd use y coordinate tree -> we need to see every node to find all the points left of B
+			- We can't build a BST of body objects only in x or only in y 
+	- QuadTree: Four children with NW, NE, SW, SE
+		- insertion order changes the topology of the tree
+		- each node owns 4 subspaces
+		- We can simply work our way down the tree, ignoring pursuing any options that are impossible (Prunning)
+Higher Dimensional Data
+	- 3D data? (OctTree - 8 directions)
+	- Kd Tree!
+		- Want to find songs with the following features:
+			- Length between 3 min and 6 min - time dimension
+			- Between 1000 and 20,000 listens - frequency dimension
+			- Between 120 to 150 bpm - bpm dimension
+			- Were recorded after 2004 - date dimension
+		- K-d Tree Insertion Demo - split the world alternatively.
+			- Quad Tree is for 2d, but kd tree is generalized for k dimension.
+			- Each point owns 2 subspaces
+				- similar to a quadtree
+
+		- nearest() with k-d Tree?
+			-  when going down the tree, we need to look at the good side first, then we need to see the bad side as well for potential point being closer than any other points.
+			- sometimes, if the best possible point in the bad side is worse than our known best, then we don't need to look at it.
+
+			- Pseudocode
+ nearest(Node n, Point goal, Node best){
+ 	if n is null, return best
+ 	if n.distance(goal) < best.distance(goal), best = n
+ 	if goal < n (according to n's comparator):
+ 		goodSide = n.leftchild
+ 		badSide = n.rightchild
+ 	else:
+ 		goodSide = n.rightchild
+ 		badSide = n.leftchild
+ 	best = nearest(goodSide, goal, best)
+ 	if badSide could still have something useful
+ 		best = nearest(badSide, goal, best)
+ 	return best
+ }
+
+
+
+Uniform Partitioning
+	- draw a grid (spliting the world evenly and equally)
+
+Important Questions:
+1. Range Finding: What are all the objects inside this subspace?
+2. Nearest: What is the closest one?
+Boids? boi
+
+
+
+
+
+
+
+
+
+
+
+
