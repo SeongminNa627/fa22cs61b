@@ -90,7 +90,7 @@ public class WordNet {
         }
         TreeSet<String> commons = new TreeSet<>();
         for (String word: freqTable.keySet()){
-            if (freqTable.get(word) > 1){
+            if (freqTable.get(word) >= words.length){
                 commons.add(word);
             }
         }

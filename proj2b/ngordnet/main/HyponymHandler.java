@@ -10,8 +10,8 @@ import java.util.List;
 
 
 public class HyponymHandler extends NgordnetQueryHandler {
-    private WordNet wn;
-    private NGramMap ngm;
+    WordNet wn;
+    NGramMap ngm;
     public HyponymHandler(WordNet wn, NGramMap ngm){
 
         this.wn = wn;
@@ -33,8 +33,10 @@ public class HyponymHandler extends NgordnetQueryHandler {
             }
             String[] kWords = new String[k];
             System.arraycopy(sortedComWords, 0,kWords, 0, k);
+            Arrays.sort(kWords);
             return Arrays.toString(kWords);
         }
+
         return Arrays.toString(commonWords);
     }
 
