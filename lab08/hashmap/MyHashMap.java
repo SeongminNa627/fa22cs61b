@@ -111,14 +111,15 @@ public class MyHashMap<K, V> implements Map61B<K, V>, Iterable<K> {
 
     @Override
     public boolean containsKey(K key) {
-        for (int i = 0; i < this.buckets.length; i ++){
-            Collection<Node> bucket = buckets[i];
-            if (buckets[i]!= null){
-                for (Node node: bucket){
-                    if (key.equals(node.key)){
-                        return true;
-                    }
-                }
+        int hash = key.hashCode();
+        int bucketIndex = Math.floorMod(hash, buckets.length);
+        Collection<Node> bucket = buckets[bucketIndex];
+        if (bucket == null){
+            return false;
+        }
+        for (Node node: bucket){
+            if (key.equals(node.key)){
+                return true;
             }
         }
         return false;
@@ -162,14 +163,12 @@ public class MyHashMap<K, V> implements Map61B<K, V>, Iterable<K> {
             //there is a bucket for this key
             for (Node node: bucket){
                 //if there is a node with the same key -> change the value
-                // no need to resize() whatsoever
                 if (key.equals(node.key)){
                     node.value = value;
                     return;
                 }
             }
             //if there is no node found in the bucket -> create a new node
-            // need to resize() if necessary
             bucket.add(createNode(key, value));
             this.size ++;
         }
