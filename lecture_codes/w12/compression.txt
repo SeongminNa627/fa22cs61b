@@ -1,0 +1,49 @@
+Compression
+
+Prefix Free Code
+Easy way to compress: Use fewer than 8 bits for each letter. 
+	- Have to decide which bit sequences should go with which letters.
+	- More generally, we'd say which codewords go with which symbols.
+
+In MorseCode
+-- * -- * means MEME or GG. 
+We will avoid this situation by creating the prefix free code. 
+Some prefix-free codes are better for some texts than others.
+	-> EEEAT can be 15 bits in some prefix-free code and 20 bits in some other code.
+
+Shannon Fano Code
+	- We will count the frequency. 
+	- Left half gets a leading zero. Right half gets a leading one. 
+Huffman Coding
+	- Count the frequency
+	- add the two smallest make it a super node. 
+	- so on and so forth
+	- how many bits per symbol? very efficient!!!
+Huffman Coding Data Structure
+	-> Encoding
+		->  Map, array of bitsequence to retrieve, can use character as index
+			- compute hashcode
+			- mod by number of buckets
+			- look in a linked list
+	-> Decoding
+		-> trie! longest prefix of 100011110111101010 -> 1000 -> I
+Huffman Coding In Practice!
+	-> Build one corpus per input type (general way of encoding entire English)
+	-> For every possible input file, create a unique code just for that fiel. Send the code along with the compressed file. 
+
+	Compression
+	1. Frequency Counting
+	2. Build encoding array and decoding trie.
+	3. Write decoding trie to output.huf.
+	4. Write codeword for each symbol to output.huf. 
+
+	Decompression 
+	1. Read in decoding trie.
+	2. use codeword bits to walk down the trie, outputting symbols every time you reach a leaf
+
+	Summary: 
+	1. Consider each b-bit symbol (e.g. 8-bit chunks, Unicode characters, etc.) of x.txt, counting occurrences of each of the 2^b possibilities, where b is the size of each symbol in bits. 
+	2. Use huffman code construction algorithm to create a decoding trie and encoding map. Store this trie at the beginning of X.huf.
+
+	The decompressing algorithm is also included. 
+

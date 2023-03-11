@@ -1,0 +1,25 @@
+MergeSort Runtime
+ Strings of length W?
+ 	- O(NlogN) if each comparison takes constant time
+ 	- O(WNlogN) if each comparison takes O(W) time. 
+ 	- it depends on the structure of the strings
+
+ Which is faster? 
+ when might LSD sort be faster? 
+ 	- sufficiently large N
+ 	- if strings are very similar to each other
+ 		- each merge sort comparison costs O(W)
+ when mgiht MergeSort be faster?
+ 	- If strings are highly dissimilar from each other.
+ 		- each merge sort comparison is very fast
+
+MSDSort cost model
+	- if strings are all equal, we examine letters O(NW)
+MergeSort cost model
+	- if strings are all equal, we examine WNlogN which is a bit slower than mergesort. 
+
+LSD Radix Sort on integers. 
+	- Treat integers as a string
+	- We modify LSD radix sort to work natively on integers. 
+		- we can change the base, so less number of digits for each number. 
+		- however, if we increase the base to decreasethe number of digits, we are increasing the size of alphabet, which again results in slowing down the algorith to use counting sort with a gaint length of frequency table.

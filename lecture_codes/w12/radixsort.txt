@@ -1,0 +1,38 @@
+Intro to Counting Sort
+We can exploit the space!
+	- Create a new arry
+	- Copy item with key i into ith entry of new array.
+	-> Worst case O(N).
+Generalize Counting Sort:
+	- count number of occurrences of each item
+		- we will have starting points array
+	- iterate through list, using count array to decide where to put everything
+		- increment the starting points once we added items
+Counting Sort Runtime:
+	- is slow since we need to build an array of size that's the biggest of the data set.
+		- Count array is also wasteful
+	- with N keys with alphabet of size of R?
+		- creation of an array of size R: O(R) -> what kind of input are there?
+		- counting number of each item: O(N) -> collection of data
+		- calculating target positions of each item: O(R)
+		- creating an array of size N to store ordered data: O(N)
+		- copying items from original array to ordered array: Do N times:
+			- check target position: O(1)
+			- update target position: O(1)
+		- copying items from ordered array back to original array: O(N)
+		O(N + R) -> R is really big -> slow, otherwise faster!
+Radix Sort (LSD Radix Sort) - Least Significant Digits -> Strings of alphabetical keys only. 
+	- Strings consist of characters from a finite alphabet!
+		- for a key 43415 -> least significant digit: 5
+		- once we sort something in the LSD order
+			- we will MSD -> this will give us a sorted order.
+	- Runtime:
+		- O(WN+WR)
+		- N: Number of items, R: size of alphabet, W: Width of the longest item in # digits
+	- When lengths of the keys are all different, we will give imaginary space when trying to sort by MSD
+Radix Sort (MSD Radix Sort) - 
+	- useful when the words start with highly desimilar characters and really long -> we do not even need to go further.
+	- We will sort MSD, we will go to the left and sort within each section. 
+	- Runtime 
+		- Best Case: O(N + R)
+		- Worst Case: O(WN + WR)
