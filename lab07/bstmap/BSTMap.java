@@ -209,9 +209,7 @@ public class BSTMap<K extends Comparable, V> implements Map61B, Iterable{
     }
     public Object removeHelper(BSTNode root, Object key, Object value){
         BSTNode curr = root;
-        if (curr == null){
-            return null;
-        }
+
         BSTNode parent = null;
         while(curr != null && !curr.key.equals(key) && !curr.value.equals(value)){
             parent = curr;
@@ -223,11 +221,11 @@ public class BSTMap<K extends Comparable, V> implements Map61B, Iterable{
                 curr = curr.right;
             }
         }
-        if (!curr.value.equals(value)){
-            return null;
-        }
         // Case 0: No node was found or empty BST.
         if (curr == null){
+            return null;
+        }
+        if (!curr.value.equals(value)){
             return null;
         }
         // Case 1: Deleting a node with no children
@@ -252,24 +250,14 @@ public class BSTMap<K extends Comparable, V> implements Map61B, Iterable{
         }
         // Case 2: Deleting a node with two children
         else if (curr.left != null && curr.right != null){
-            BSTNode successorParent = min(curr);
-            // Case 2-1: Deleting a node with right child being the successor
-            if (successorParent.equals(curr)){
-                BSTNode successor = curr.right;
-                successor.left = curr.left;
-                this.root = successor;
-                size --;
-                return value;
-            }
-            else {
-                K newKey = successorParent.left.key;
-                V newVal = successorParent.left.value;
-                removeHelper(this.root, successorParent.left.key, successorParent.left.value);
-                curr.key = newKey;
-                curr.value = newVal;
-                size --;
-                return value;
-            }
+            BSTNode successor= min(curr);
+            K newKey = successor.key;
+            V newVal = successor.value;
+            removeHelper(this.root, newKey, newVal);
+            curr.key = newKey;
+            curr.value = newVal;
+            size --;
+            return value;
         }
         // Case 3: Deleting a node with a single child
         else {
@@ -303,21 +291,20 @@ public class BSTMap<K extends Comparable, V> implements Map61B, Iterable{
             }
         }
     }
-    //returns the parent of minimum node bigger than curr
+    //returns the minimum node bigger than curr
     private BSTNode min(BSTNode curr){
-        BSTNode parent = curr;
-        if (parent == null){
+        if (curr == null){
             return null;
         }
-        else if (parent.right.left == null){
-            return parent;
+        else if (curr.right.left == null){
+            return curr.right;
         }
         else{
-            parent = parent.right;
-            while (parent.left.left != null){
-                parent = parent.left;
+            curr = curr.right;
+            while (curr.left.left != null){
+                curr = curr.left;
             }
-            return parent;
+            return curr.left;
         }
     }
 
