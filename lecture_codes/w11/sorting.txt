@@ -1,0 +1,146 @@
+Sorting
+	- intellectually rich
+	- orderirng relation
+		- Law of Trichotoy: a < b, a = b, a > b is true
+		- Law of Transitivity
+		- sort: permutation of a sequence of elements that puts the keys into non-decreasing relative to a given ordering relation
+		x1 <= x2 <= x3...
+		- example ordering relation: the length of strings
+		- in Java, ordering relations are typically given in the form of compareTo or compare method
+	- inversion 
+		- a pair of elements that are out of order with respect <.
+		 0 1 1 2 3 4 8 6 9 5 7
+		 - sort: given a squence of elements with Z inversions -> reduce it to 0
+	- time complexity
+		- Dijkstra's has time complexity O(E log V)
+		- Space complexity (extra memeory useage of an algorithm)
+			- O(v+e) -> we don't count v as the space complexity because they are always exist. 
+Selection Sort and HeapSort
+	- Selection Sort -> find the smallest and thow it at the very front. -> O(n^2)
+	- HeapSort
+		- maintain a heap and get the high-priority faster
+		- insert all items into a max heap, and discard input array. Create output array.
+		- delete the max and put it at the end 
+		- O(NlogN) for inserting + O(N) for looping + O(log N)
+		- memory of O(N) for the heap
+		- you can do min heap but there is a trick you can't use with min heap
+	- In Place Heapsort
+		- treat the input array as a heap and heapify it. (bottom - up heapification)
+		- Phase 1 - (heapification)
+			- sink nodes in reverse level order
+				- after sinking, guaranteed that tree rooted at posistion k is a heap
+				- see the slide
+		- Phase 2 - swap it with the end item and sink the end item.
+			- delete largest item from the max heap, swapping root with last item in the heap.
+		- Runtime
+			- bottom-up heapification: O(NlogN) - each takes logN and happens N times
+			- selecting largest item: O(1) time
+			- removing largest item: O(logN) for each removal
+
+	+ Runtime Table
+MergeSort
+	- Top-Down Merge Sort
+		- split items into 2 roughly even pieces
+		- mergesort each half(steps not shown, this is a recursive algorithm)
+		- merge the two sorted halves to form the final result
+			- compare input[i] < input[j] if necessary
+			- copy smaller item and increment p and i or j.
+		- Runtime 
+			- time - NlogN
+			- space - N extra aux array
+Insertion Sort
+	- starting with an empty output sequence
+	- add each item fromm input, inserting into output at right point.
+
+	- better approach
+		- in-place insertion (swap)
+		- Repeat for i = 0 to n-1:
+			- designate item i as the traveling item
+			- swap item backwards until traveller is in the right place among all previously examined items. 
+		- Runtime O(N^2) worst, O(N) best
+
+Almost sorted array with one inversion?
+	-> insertion -> O(N + K), K is the number of inversions
+	-> almost sorted: inversions < cN
+	-> small arrays insertion sort is fastest.
+
+QuickSort (Backstory, Partitioning)
+	- pick an item, pivot. and move everything left and right depending on < or >
+		observation
+		- once the items are all sorted, pivot is in place. It is the ultimate place for the pivot to be.
+		- can sort two halves separately, e.g. through recursive use of partitioning
+		- look at the demo!
+			- partition on the leftmost item
+			- quicksort left half
+			- quicksort right half
+		- Runtime
+			- just like merge sort, pivot lands at the middle
+			- N log N
+			- worst case: pivot always lands at beginning of array -> N^2
+				- argument slide 1: 10% case
+					- even when the pivot lands on 10% of the size of the array, it will be O(NlogN)
+				- argument slide 2: Quick sort is BST sort in disguise
+	- How to choose a good pivot? (how to avoid bad case)
+		1. Randomness: Pick a random pivot or shuffle before sorting
+		2. smarter pivot selection: calculate or approximate the median
+		3. introspection: switch to a safer sort if recursion goes to deep
+		4. Preprocess the array: could analyze array to see if quicksort will be slow. (not realistic)
+
+
+		-> Randomness (great!)
+			- Pick pivot randomly
+			- Suffle before you sort
+				- can be trouble for duplicates
+		-> Smarter pivot?
+			- pick a few. Use them as pivots -> Deterministic/Constant Time quick sort -> always has a family of dangerous inputs 
+			- Median usage? slow but sure.
+		-> Introsepction
+			- if it exceeds soe critical value, switch to mergesort
+		-> runtime and memory complexity table
+
+		-> Quicksort is fastest when
+			- pviot selection -> use leftmost
+			- partition algorithm -> make an array copy then do three scans for red, white and blue items
+			- how we deal with avoiding the worst case -> shuffle
+			are good
+
+			- What Tony Hoare did -> slides (Hoare Partitioning)
+				Two pointers from both ends, scanning towards each other.
+				If right pointer see something-supposed-to-be-on-the-left stop
+				vice versa for left pointer
+				they both stop -> trade 
+				continue
+				when left and right meet, swap the leftmost with left pointer
+			 - have to live with the worst case in practice
+			 	- can't do randomness
+			 	- can't find median faster
+		    - Quick Select (to find median)
+		    	- pivot sort until we lands in the middle.
+	-> Java uses QuickSort and MergeSort depending on two different circumstances
+		- Stability
+			- A sort is stable when it preserves the same previous order
+				mapping between int to String
+				when having the same integers, mapped string should be in the same order
+			- insertion sort is stable
+				- equivalent items never move past their equivalent brethren
+			- quick sort is generally unstable
+				- hoare is stable (not practical)
+			- Arrays.sort use mergesort if somearra consists of objects
+			- Quicksort if somearray consists of primitives
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
