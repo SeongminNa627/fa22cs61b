@@ -1,0 +1,12 @@
+Topological Sorts
+	- Perform a DFS traversal from every vertex with indegree 0, not clearing markings in between traversals.
+		- record DFS postorder in a list
+		- topological ordering is given by the reverse of that list (reverse postorder).
+		- Ordering of tasks
+Shortest Paths 
+	- Dijkstra's algorithm visits the nodes in the order of increasing best distance.
+	- Dijkstra's working even with negative edges?
+		-   we visit the nodes in the topological order. 
+			- meaning that it visits the nodes after updating all the edges entering into to the nodes.
+Longest Paths
+	- 

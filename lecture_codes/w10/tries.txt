@@ -1,0 +1,88 @@
+Tries
+	 - BST and HashTable
+	 	- BST -> contains()/add() -> log N
+	 	- HashTable -> contains()/add() -> constant when the items are evenly spread on average
+	 - if the keys are all char, we do not even need to use hashCode()!
+	 	- fixed-length-array -> constant with no caveat
+
+	 - if the keys are String? -> tries!
+	 	- Every node stores only one letter
+	 	- nodes can be shared by multiple keys
+	 	- For any starting letter, it becomes the first child of a root.
+	 	- color the last letter node!
+	 	- miss when String is not in tries, or hit when it is in tries.
+	 		- if the final node is white -> miss
+	 		- if we fall off the tree -> miss
+	 	- can even hold any value attached to the ending nodes.
+Trie Implementation and Runtime
+	- First Approach
+		- Node
+			private char ch;
+			private boolean isKey;
+			private DataIndexedCharMap next; -> 128 links for ASCII
+			private Node(char c, boolean b, int R){
+				ch = c;
+				isKey = b;
+				next = new DataIndexedCharMap<Node>(R); -> children
+			}
+		- quite wasteful...to have that many links
+		- if we go ch'th link, i will get ch, which is also redundant 
+		- add/contains runtime?
+			- constant time! completely independent of N, but L (the length of String we are looking at)
+	- Second Approach
+		- In fact, map from character to node can be any thing -> BST, HashTable
+		- this.next can be anything you choose! 
+			- DataIndexedCharMap -> fast, memory hungry
+			- BST, hashTable -> less fast, memory efficient C links per node, where C is the number of children
+				- BST is O(log R), where R is size of alphabet R = 128
+				- HashTable is O(R), where R is size of alphabet R = 128
+
+Special Operations with Tries!
+	- Trees and HashTable got nothing on them!
+		- prefix matching?
+		- longestPrefixOf("sample") -> really fast with trie while Tree and HashTable are slow
+		- keysWithPrefix("sa") -> result [sad, sam, same, sap]
+			Find the node alpha corresponding to the string (alpha is "a" in this case).
+			Create an empty list x.
+			for character c in alpha.next.keys():
+				call colHelp("sa" + c, x, alpha.next.get(c))
+		- collect() -> all keys in the tries? 
+			collect():
+				create an empty list of result x. 
+				For character c in root.next.keys():
+					colHelp("c", x, root.next.get(c)).
+				return x.
+			colHelp(String s, List<String> x, Node n)
+				if n.isKey, then x.add(s).
+				For character c in n.next.keys():
+					call colHelp(s + c,, x, n.next.get(c))
+		- autocomplete
+			- why good with tries?
+				- saves tons of space
+				- since end node keeps track of the value as well, topTree matches can be done easily as well.
+			- what problem?
+				- prefix(b)? -> retrieve billions of strings with b -> collect top three?
+					-> too many strings
+				- better approach: each node stores its own value AND best value of its supsting.  
+					- we will consider in the order of "best"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
