@@ -22,6 +22,7 @@ public class TestBSTDelete {
         test.put(48, "48");
         test.put(45, "45");
         test.put(50, "50");
+        test.remove(48, "48");
         test.printInorder();
     }
 }
