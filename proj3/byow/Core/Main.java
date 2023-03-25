@@ -11,8 +11,7 @@ public class Main {
             System.exit(0);
         } else if (args.length == 2 && args[0].equals("-s")) {
             Engine engine = new Engine();
-            engine.interactWithInputString(args[1]);
-            System.out.println(engine.toString());
+            engine.ter.renderFrame(engine.interactWithInputString(args[1]));
         } else {
             Engine engine = new Engine();
             engine.interactWithKeyboard();

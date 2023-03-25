@@ -1,0 +1,16 @@
+
+
+
+
+Algorithm for Creating Rooms Never Colliding
+
+
+= we will keep track of the size of each subspace of QuadTree.
+    - There can be four subspaces. Two subspaces for each.
+
+1. Randomly choose the directions.
+2. Considering the two subspaces of that direction, create a room.
+3. Calculate the subspaces of the room just created.
+    - Here the direction where the room came from need to be considered as a bound.
+4. Set the new room to become the child, and value is the eight subspaces.
+
